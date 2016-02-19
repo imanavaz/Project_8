@@ -93,6 +93,7 @@
     <Content Include="Libraries\classie.js" />
     <Content Include="Libraries\gnmenu.js" />
     <Content Include="Libraries\modernizr.custom.js" />
+    <Content Include="Scripts\fileProcessing.js" />
     <Content Include="Styles\component.css" />
     <Content Include="Styles\demo.css" />
     <Content Include="Styles\normalize.css" />
@@ -103,7 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

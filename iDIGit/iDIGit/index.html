@@ -12,9 +12,9 @@
     <!--API and Libraries-->
     <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
     <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
-   
-
+    
     <!--My Code-->
+    <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
 
 </head>
 <body>
@@ -51,8 +51,11 @@
                     </div><!-- /gn-scroller -->
                 </nav>
             </li>
-            <li><a class="gn-icon gn-icon-article">Import data</a></li>
-            <li><a class="codrops-icon codrops-icon-prev" href="http://tympanus.net/Development/HeaderEffects/"><span>Previous Demo</span></a></li>
+            <li>
+                <a class="gn-icon gn-icon-article" onclick="document.getElementById('import_file').click(); return false">Import data</a>
+                <input type="file" id="import_file" accept=".csv,.txt" name="import_file" style="visibility: hidden; width: 1px; height: 1px" multiple />
+            </li>
+            <li><a class="codrops-icon codrops-icon-prev"><span>Previous Demo</span></a></li>
             
         </ul>
     </div><!-- /container -->
@@ -61,7 +64,10 @@
     <script src="Libraries/gnmenu.js"></script>
 
     <script>
-			new gnMenu( document.getElementById( 'gn-menu' ) );
+        new gnMenu(document.getElementById('gn-menu'));
+
+        document.getElementById('import_file').addEventListener('change', readSingleFile, false);
+
     </script>
 
 </body>
