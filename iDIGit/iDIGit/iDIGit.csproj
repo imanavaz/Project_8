@@ -74,6 +74,7 @@
     <Content Include="Fonts\ecoicons\ecoicons.svg" />
     <Content Include="Fonts\ecoicons\license.txt" />
     <Content Include="Fonts\ecoicons\Read Me.txt" />
+    <Content Include="Libraries\papaparse.min.js" />
     <Content Include="packages.config" />
     <Content Include="Fonts\codropsicons\codropsicons.eot" />
     <Content Include="Fonts\codropsicons\codropsicons.ttf" />

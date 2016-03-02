@@ -25,14 +25,31 @@ function readSingleFile(eve) {
 
 function processCSV(f)
 {
-    var reader = new FileReader();
+    Papa.parse(f, {
+        dynamicTyping: true,
+        header: true,
+        worker: true,
+        comments: "#",
+        //step: function (row) {
+        //    console.log("Row:", row.data);
+        //},
+        step: function(results) {
+            console.log("Row:", results.data);
+        },
+        complete: function () {
+            console.log("Processing file: "+ f + " is complete");
+        }
+    });
 
-    reader.onload = function (e) {
-        contents = e.target.result;
-        console.log(contents);
-    };
 
-    reader.readAsText(f);
+    //var reader = new FileReader();
+
+    //reader.onload = function (e) {
+    //    contents = e.target.result;
+    //    console.log(contents);
+    //};
+
+    //reader.readAsText(f);
 }
 
 function processTXT(f)
