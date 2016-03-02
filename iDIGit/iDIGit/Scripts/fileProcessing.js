@@ -28,18 +28,20 @@ function processCSV(f)
     Papa.parse(f, {
         dynamicTyping: true,
         header: true,
-        worker: true,
+        //worker: true,
         comments: "#",
         //step: function (row) {
         //    console.log("Row:", row.data);
         //},
-        step: function(results) {
-            console.log("Row:", results.data);
-        },
-        complete: function () {
+        //step: function(results) {
+        //    console.log("Row:", results.data);
+        //},
+        complete: function (results) {
+            console.log(results.meta);
             console.log("Processing file: "+ f + " is complete");
         }
     });
+
 
 
     //var reader = new FileReader();
