@@ -1,11 +1,14 @@
 ﻿var contents;
-
+var w = 500;
+var h = 400;
 
 function readSingleFile(eve) {
 
     var file = eve.target.files[0];
 
-    console.log(file.path);
+    //var filePath = document.getElementById("import_file").value;
+    //console.log(filePath);
+
 
     if (!file) {
         return;
@@ -27,13 +30,7 @@ function readSingleFile(eve) {
 
 function processCSV(f)
 {
-    console.log(f);
-    d3.csv(f)
-    .row(function (d) { return { key: d.key, value: +d.value }; })
-    .get(function (error, rows) { console.log(rows); });
-
-
-
+    
     Papa.parse(f, {
         dynamicTyping: true,
         header: true,
@@ -46,23 +43,11 @@ function processCSV(f)
         //    console.log("Row:", results.data);
         //},
         complete: function (results) {
-    //        console.log(results.meta);
-    //        console.log("Processing file: " + f + " is complete");
-
-
+            console.log(results.meta.fields);
+    
         }
     });
 
-
-
-    //var reader = new FileReader();
-
-    //reader.onload = function (e) {
-    //    contents = e.target.result;
-    //    console.log(contents);
-    //};
-
-    //reader.readAsText(f);
 }
 
 function processTXT(f)
