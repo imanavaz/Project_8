@@ -94,6 +94,7 @@
     <Content Include="Libraries\classie.js" />
     <Content Include="Libraries\gnmenu.js" />
     <Content Include="Libraries\modernizr.custom.js" />
+    <Content Include="Scripts\displayLogic.js" />
     <Content Include="Scripts\fileProcessing.js" />
     <Content Include="Styles\component.css" />
     <Content Include="Styles\demo.css" />

@@ -13,16 +13,17 @@
     <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
     <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
     <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
-    <script type="text/javascript" src="Libraries/d3.min.js"></script>
+    <!-->script type="text/javascript" src="Libraries/d3.min.js"></script-->
 
     <!--My Code-->
     <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
+    <script type="text/javascript" src="Scripts/displayLogic.js"></script>
 
 </head>
 <body>
 
     <div class="container">
-        <ul id="gn-menu" class="gn-menu-main">
+        <ul id="gn-menu" class="gn-menu-main"><!--Top menu-->
             <li class="gn-trigger">
                 <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
                 <nav class="gn-menu-wrapper">
@@ -62,6 +63,13 @@
         </ul>
     </div><!-- /container -->
 
+    
+    <!--Canvas-->
+    <div id="canvas-area">
+        <div id="drawing-area">
+        </div>
+    </div>
+    
     <script src="Libraries/classie.js"></script>
     <script src="Libraries/gnmenu.js"></script>
 
