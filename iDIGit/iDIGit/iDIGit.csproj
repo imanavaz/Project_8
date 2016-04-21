@@ -68,7 +68,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data Samples\data sample.txt" />
     <Content Include="Fonts\codropsicons\codropsicons.svg" />
     <Content Include="Fonts\codropsicons\license.txt" />
     <Content Include="Fonts\ecoicons\ecoicons.dev.svg" />
@@ -83,6 +82,7 @@
     <Content Include="Fonts\ecoicons\ecoicons.eot" />
     <Content Include="Fonts\ecoicons\ecoicons.ttf" />
     <Content Include="Fonts\ecoicons\ecoicons.woff" />
+    <Content Include="Data Samples\data sample.csv" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
