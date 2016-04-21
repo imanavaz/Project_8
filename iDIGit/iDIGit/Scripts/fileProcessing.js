@@ -2,13 +2,9 @@
 var w = 500;
 var h = 400;
 
-function readSingleFile(eve) {
+function readSingleFile(eve) { //executes when a file is read by "import data" 
 
     var file = eve.target.files[0];
-
-    //var filePath = document.getElementById("import_file").value;
-    //console.log(filePath);
-
 
     if (!file) {
         return;
@@ -36,13 +32,13 @@ function processCSV(f)
         header: true,
         //worker: true,
         comments: "#",
-        //step: function (row) {
+        //step: function (row) {//testing features
         //    console.log("Row:", row.data);
         //},
         //step: function(results) {
         //    console.log("Row:", results.data);
         //},
-        complete: function (results) {
+        complete: function (results) {//Process csv results
             console.log(results.meta.fields);
     
         }
