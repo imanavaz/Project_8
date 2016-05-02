@@ -11,6 +11,7 @@
    
     <!--API and Libraries-->
     <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>  
     <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
     <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
     <!-->script type="text/javascript" src="Libraries/d3.min.js"></script-->
@@ -18,10 +19,10 @@
     <!--My Code-->
     <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
     <script type="text/javascript" src="Scripts/displayLogic.js"></script>
-
+    <script type="text/javascript" src="Scripts/index.js"></script>
 </head>
 <body>
-
+	
     <div class="container">
         <ul id="gn-menu" class="gn-menu-main"><!--Top menu-->
             <li class="gn-trigger">
@@ -62,17 +63,22 @@
             
         </ul>
     </div><!-- /container -->
+		
+    <script>
 
-    
+
+
+	</script>
     <!--Canvas-->
     <div id="canvas-area">
         <div id="drawing-area">
+			
         </div>
     </div>
     
     <script src="Libraries/classie.js"></script>
     <script src="Libraries/gnmenu.js"></script>
-
+	
     <script>
         new gnMenu(document.getElementById('gn-menu'));
 
