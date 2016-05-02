@@ -46,21 +46,9 @@ function processCSV(f)
 			var resultArray = resultData.split(",");
 			//var resultArray = JSON.parse(JSONData); //Convert JSON to Array 
 			resultDiv = document.getElementById("drawing-area");
+			
 			resultArray.forEach(myFunction);
-			angular.bootstrap();
-			angular.module('drag').directive('draggable', function($compile) {
-			return {
-					scope: {
-						data: item
-					},
-					link: function(scope, element) {
-						resultDiv = '<div ' + scope.data
-							+ '-feed-item item="item"></div>';
-							
-						element.append($compile(resultDiv)(scope));
-					}
-				};
-			});
+			
 			//document.getElementById("drawing-area").innerHTML = results.meta.fields;
         }
     });
@@ -80,8 +68,9 @@ function processTXT(f)
 }
 
 function myFunction(item, index) {
-	resultDiv.innerHTML = resultDiv.innerHTML + "<div class='col-sm-12'><div class='panel panel-default col-sm-4 draggable' draggable>" + item + "</div> </div>" ;
-	
+	//resultDiv.innerHTML = resultDiv.innerHTML + "<div class='panel panel-default col-sm-4'><div class='panel-body'><ul>";
+	resultDiv.innerHTML = resultDiv.innerHTML + "<li>" + item + "</li> " ;
+	//resultDiv.innerHTML = resultDiv.innerHTML + "</ul></div></div>";
 	$('.draggable').draggable();
 	
 	
