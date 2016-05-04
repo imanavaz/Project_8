@@ -17,13 +17,16 @@
   <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
   <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
   
-
+	
   <!--My Code-->
   <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
   <script type="text/javascript" src="Scripts/displayLogic.js"></script>
   <script src="Scripts/index.js"></script>
-  <script type="text/javascript" src="Libraries/jquery-ui.min.css"></script>
-  <script type="text/javascript" src="Libraries/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  
+  
   
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */ 
@@ -66,8 +69,7 @@
 	
 	/* For fixed and overflow a panel */
 	.fixed-panel {
-	  min-height: 500px;
-	  max-height: 500px;
+	  height: 500px;
 	  overflow-y: scroll;
 	}
   </style>
@@ -127,25 +129,14 @@
 		</ul>
 	</div>
 	
-	
 	<div class="container-fluid text-left" >    
 		<!--Canvas-->
 		<div id="canvas-area" >
-			<div class='panel panel-default col-sm-4 draggable'>
-				<div class="panel-heading"> 
-					Sample Data
-				</div>
-				<div class='panel-body'>
-					<ul id="drawing-area" class="fixed-panel">
-					
-					</ul>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 	<script>
         document.getElementById('import_file').addEventListener('change', readSingleFile, false);
-
     </script>
 
 
