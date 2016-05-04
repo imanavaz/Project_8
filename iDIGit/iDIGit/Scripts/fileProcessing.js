@@ -58,9 +58,7 @@ function processCSV(f)
 			
 			//== Foreach of the data
 			resultArray.forEach(myFunction);
-			$( ".resizable" ).resizable({
-			  alsoResize: ".also-" + panelCount
-			});
+			
 			panelCount+=1;
 			//document.getElementById("drawing-area").innerHTML = results.meta.fields;
         }
@@ -91,11 +89,15 @@ function myFunction(item, index) {
 function createPanel(canvasArea) {
 	panelName = "panel-" + panelCount;
 	
-	canvasArea.innerHTML = canvasArea.innerHTML + "<div class='panel panel-default col-sm-4 draggable resizable'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'> <ul id='" + panelName + "' class='fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
+	canvasArea.innerHTML = canvasArea.innerHTML + "<div class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'> <ul id='" + panelName + "' class='fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
 	$(".clickable").on("click", function(){ 
 	   $(this).closest(".panel").remove();
 	});
 	
+	$( ".resizable-" + panelCount ).resizable({
+	  alsoResize: ".also-" + panelCount
+	});
+
 	return panelName;
 }
 
