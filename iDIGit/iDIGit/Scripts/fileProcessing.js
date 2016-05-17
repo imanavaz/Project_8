@@ -8,8 +8,12 @@ var ay;
 var dx;
 var dy;
 var jg;
+var c;
+var ctx;
+var tempParent;
+
 $( document ).ready(function() {
-    
+    createCanvasOverlay('rgba(0,0,0,0)');
 });
 
 
@@ -88,19 +92,25 @@ function processTXT(f)
 
 function myFunction(item, index) {
 	//resultDiv.innerHTML = resultDiv.innerHTML + "<div class='panel panel-default col-sm-4'><div class='panel-body'><ul>";
-	resultDiv.innerHTML = resultDiv.innerHTML + "<li class='draggableItem' id='item'>" + item + "</li> " ;
-	$('.draggableItem').draggable({scroll:false, zIndex: 999999 , stack:"body",
+	resultDiv.innerHTML = resultDiv.innerHTML + "<li role='presentation' class='draggableItem active' id='item' style='z-index:999;' >" + item + "</li> " ;
+	$('.draggableItem').draggable({snap: true ,
 		start: function( event, ui ) {
-			jg = new jsGraphics($(this).parent().parent().attr('id'));
+			tempParent = $(this).closest(".fixed-panel");
+			tempParent.removeClass("fixed-panel");
 			ax = $(this).offset().left;
-			ay = $(this).offset().top;
+			ay = $(this).offset().top;			
+			c=document.getElementById("MainCanvas");
+			ctx=c.getContext("2d");
+			ctx.beginPath();
+			ctx.moveTo(ax,ay);
+			
 		},
 		stop: function( event, ui ) {
+			tempParent.addClass("fixed-panel");
 			dx = $(this).offset().left;
 			dy = $(this).offset().top;
-			jg.setColor("#ff0000"); // red
-			  jg.drawLine(ax, ay, dx, dy); // co-ordinates related to "myCanvas"
-			  jg.paint();
+			ctx.lineTo(dx,dy);
+			ctx.stroke();
 		}
 	});
 	//resultDiv.innerHTML = resultDiv.innerHTML + "</ul></div></div>";
@@ -112,7 +122,7 @@ function myFunction(item, index) {
 function createPanel(canvasArea) {
 	panelName = "panel-" + panelCount;
 	
-	canvasArea.innerHTML = canvasArea.innerHTML + "<div style='z-index:1;' class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
+	canvasArea.innerHTML = canvasArea.innerHTML + "<div style='' class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='nav nav-pills nav-stacked fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
 	//canvasArea.innerHTML = canvasArea.innerHTML + "<div id='panel-data' class='dialog-" + panelCount + "' title='Panel " + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='fixed-panel'> </div>";
 	$(".showSize").on("click", function(){ 
 		alert(
@@ -136,6 +146,45 @@ function createPanel(canvasArea) {
 	});
 
 	return panelName;
+}
+
+//Create Canvas Overlay
+function createCanvasOverlay(color, canvasContainer)
+ {
+    canvasContainer = document.createElement('canvas');
+        document.body.appendChild(canvasContainer);
+        canvasContainer.style.position="absolute";
+        canvasContainer.style.left="0px";
+        canvasContainer.style.top="0px";
+        canvasContainer.style.width=screen.width;
+        canvasContainer.style.height=screen.height;
+        canvasContainer.style.zIndex="100";
+        canvasContainer.style.pointerEvents ="none";
+        canvasContainer.id ="MainCanvas";
+        superContainer=document.body;
+		(function() {
+        var canvas = document.getElementById('MainCanvas'),
+                context = canvas.getContext('2d');
+
+        // resize the canvas to fill browser window dynamically
+        window.addEventListener('resize', resizeCanvas, false);
+        
+        function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                /**
+                 * Your drawings need to be inside this function otherwise they will be reset when 
+                 * you resize the browser window and the canvas goes will be cleared.
+                 */
+                drawStuff(); 
+        }
+        resizeCanvas();
+        
+        function drawStuff() {
+                // do your drawing stuff here
+        }
+})();
 }
 
 
