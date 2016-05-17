@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>iDIGit</title>
+	<meta charset="utf-8" />
+    
+    <!--Styles-->
+    <link rel="stylesheet" type="text/css" href="Styles/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="Styles/demo.css" />
+    <link rel="stylesheet" type="text/css" href="Styles/component.css" />
+   
+    <!--API and Libraries-->
+    <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>  
+    <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
+    <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
+    <!-->script type="text/javascript" src="Libraries/d3.min.js"></script-->
+
+    <!--My Code-->
+    <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
+    <script type="text/javascript" src="Scripts/displayLogic.js"></script>
+    <script type="text/javascript" src="Scripts/index.js"></script>
+</head>
+<body>
+	
+    <div class="container">
+        <ul id="gn-menu" class="gn-menu-main"><!--Top menu-->
+            <li class="gn-trigger">
+                <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+                <nav class="gn-menu-wrapper">
+                    <div class="gn-scroller">
+                        <ul class="gn-menu">
+                            <li class="gn-search-item">
+                                <input placeholder="Search" type="search" class="gn-search">
+                                <a class="gn-icon gn-icon-search"><span>Search</span></a>
+                            </li>
+                            <li>
+                                <a class="gn-icon gn-icon-download">Downloads</a>
+                                <ul class="gn-submenu">
+                                    <li><a class="gn-icon gn-icon-illustrator">Vector Illustrations</a></li>
+                                    <li><a class="gn-icon gn-icon-photoshop">Photoshop files</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="gn-icon gn-icon-cog">Settings</a></li>
+                            <li><a class="gn-icon gn-icon-help">Help</a></li>
+                            <li>
+                                <a class="gn-icon gn-icon-archive">Archives</a>
+                                <ul class="gn-submenu">
+                                    <li><a class="gn-icon gn-icon-article">Articles</a></li>
+                                    <li><a class="gn-icon gn-icon-pictures">Images</a></li>
+                                    <li><a class="gn-icon gn-icon-videos">Videos</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!-- /gn-scroller -->
+                </nav>
+            </li>
+            <li>
+                <a class="gn-icon gn-icon-article" onclick="document.getElementById('import_file').click(); return false">Import data</a>
+                <input type="file" id="import_file" accept=".csv,.txt" name="import_file" style="visibility: hidden; width: 1px; height: 1px" multiple />
+            </li>
+            <li><a class="codrops-icon codrops-icon-prev"><span>Previous Demo</span></a></li>
+            
+        </ul>
+    </div><!-- /container -->
+		
+    <script>
+
+
+
+	</script>
+    <!--Canvas-->
+    <div id="canvas-area">
+        <ul id="drawing-area">
+			
+        </li>
+    </div>
+    
+    <script src="Libraries/classie.js"></script>
+    <script src="Libraries/gnmenu.js"></script>
+	
+    <script>
+        new gnMenu(document.getElementById('gn-menu'));
+
+        document.getElementById('import_file').addEventListener('change', readSingleFile, false);
+
+    </script>
+
+</body>
+</html>
