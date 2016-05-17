@@ -21,6 +21,8 @@
   <!--My Code-->
   <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
   <script type="text/javascript" src="Scripts/displayLogic.js"></script>
+  <script type="text/javascript" src="Scripts/dropzone.js"></script>
+  <script type="text/javascript" src="Scripts/wz_jsgraphics.js"></script>
   <script src="Scripts/index.js"></script>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
@@ -69,13 +71,17 @@
 	
 	/* For fixed and overflow a panel */
 	.fixed-panel {
-	  height: 500px;
-	  overflow-y: scroll;
+	  height: 300px;
+	  overflow-y: auto;
+	  z-index:-1;
 	}
+	
+	#canvas-wrap canvas{ position:relative; width:800px; height:600px ;z-index:999999;}
+	#canvas-wrap  { position:absolute; top:0; left:0; z-index:-1 }
   </style>
 </head>
 
-<body ng-app="" style="background:#34495e;" ng-init="sideNav = true">
+<body ng-app="" style="background:#34495e;" ng-init="sideNav = true" id="body">
 	<nav class="navbar" style="background:#FFFFFF;">
 		<div class="container-fluid"> 
 			<div class="navbar-header" >
@@ -128,9 +134,11 @@
 			</li>
 		</ul>
 	</div>
-	
-	<div class="container-fluid text-left" >    
+	<div class="container-fluid text-left" id="canvas-warp">    
 		<!--Canvas-->
+		<canvas id="myCanvas" >
+			
+		</canvas>
 		<div id="canvas-area" >
 			
 		</div>

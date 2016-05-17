@@ -3,6 +3,14 @@ var w = 500;
 var h = 400;
 var resultDiv;
 var panelCount=1;
+var ax;
+var ay;
+var dx;
+var dy;
+var jg;
+$( document ).ready(function() {
+    
+});
 
 
 
@@ -69,7 +77,7 @@ function processCSV(f)
 function processTXT(f)
 {
     var reader = new FileReader();
-
+	
     reader.onload = function (e) {
         contents = e.target.result;
         console.log(contents);
@@ -80,19 +88,48 @@ function processTXT(f)
 
 function myFunction(item, index) {
 	//resultDiv.innerHTML = resultDiv.innerHTML + "<div class='panel panel-default col-sm-4'><div class='panel-body'><ul>";
-	resultDiv.innerHTML = resultDiv.innerHTML + "<li>" + item + "</li> " ;
+	resultDiv.innerHTML = resultDiv.innerHTML + "<li class='draggableItem' id='item'>" + item + "</li> " ;
+	$('.draggableItem').draggable({scroll:false, zIndex: 999999 , stack:"body",
+		start: function( event, ui ) {
+			jg = new jsGraphics($(this).parent().parent().attr('id'));
+			ax = $(this).offset().left;
+			ay = $(this).offset().top;
+		},
+		stop: function( event, ui ) {
+			dx = $(this).offset().left;
+			dy = $(this).offset().top;
+			jg.setColor("#ff0000"); // red
+			  jg.drawLine(ax, ay, dx, dy); // co-ordinates related to "myCanvas"
+			  jg.paint();
+		}
+	});
 	//resultDiv.innerHTML = resultDiv.innerHTML + "</ul></div></div>";
-	$('.draggable').draggable();
+
 		
 }
+
 
 function createPanel(canvasArea) {
 	panelName = "panel-" + panelCount;
 	
-	canvasArea.innerHTML = canvasArea.innerHTML + "<div class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'> <ul id='" + panelName + "' class='fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
+	canvasArea.innerHTML = canvasArea.innerHTML + "<div style='z-index:1;' class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
+	//canvasArea.innerHTML = canvasArea.innerHTML + "<div id='panel-data' class='dialog-" + panelCount + "' title='Panel " + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='fixed-panel'> </div>";
+	$(".showSize").on("click", function(){ 
+		alert(
+		"Height = " +
+		$(this).closest(".panel").height() + "px " +
+		"Width = " +
+		$(this).closest(".panel").width() + "px "
+		
+		);
+	});
+	
 	$(".clickable").on("click", function(){ 
 	   $(this).closest(".panel").remove();
 	});
+	$('.draggable').draggable();
+	
+	//$('.dialog-' + panelCount).dialog();
 	
 	$( ".resizable-" + panelCount ).resizable({
 	  alsoResize: ".also-" + panelCount
