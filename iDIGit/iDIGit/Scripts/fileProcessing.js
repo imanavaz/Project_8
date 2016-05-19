@@ -11,6 +11,7 @@ var jg;
 var c;
 var ctx;
 var tempParent;
+var newState;
 var i = 0;
 
 $( document ).ready(function() {
@@ -63,22 +64,16 @@ function processCSV(f)
 			var resultArray = resultData.split(",");
 						
 			//== Create Panel in the canvas 
-			canvasArea = document.getElementById("canvas-area");
+			canvasArea = document.getElementById("container");
 			resultDivName = createPanel(canvasArea);
 			
 			//== Take drawing area name to be inserted with content
 			resultDiv = document.getElementById(resultDivName);
 			
 			//== Foreach of the data
-			resultArray.forEach(myFunction);
-			jsPlumb.ready(function() {
-		jsPlumb.makeSource($('.draggableItem'), {
-		connector: 'StateMachine'
-		});
-		jsPlumb.makeTarget($('.draggableItem'), {
-		anchor: 'Continuous'
-		});
-	});	
+			//resultArray.forEach(myFunction);
+			resultArray.forEach(printResult);
+			
 			panelCount+=1;
 			//document.getElementById("drawing-area").innerHTML = results.meta.fields;
         }
@@ -97,13 +92,11 @@ function processTXT(f)
 
     reader.readAsText(f);
 }
-
+/*
 function myFunction(item, index) {
 	//resultDiv.innerHTML = resultDiv.innerHTML + "<div class='panel panel-default col-sm-4'><div class='panel-body'><ul>";
 	resultDiv.innerHTML = resultDiv.innerHTML + "<li role='presentation' class='draggableItem active' id='item' style='z-index:999;' >" + item + "</li> " ;
 	
-	
-	/*
 	$('.draggableItem').draggable({snap: true ,
 		start: function( event, ui ) {
 			tempParent = $(this).closest(".fixed-panel");
@@ -124,13 +117,49 @@ function myFunction(item, index) {
 			ctx.stroke();
 		}
 	});
-	*/
+	
 	//resultDiv.innerHTML = resultDiv.innerHTML + "</ul></div></div>";
+	
+}
+*/
+function printResult(item, index) {
+	jsPlumb.ready(function() {
+	jsPlumb.setContainer($('#container'));
+	var connect = $('<div>').addClass('connect').text(item);
+	var div = $('#'+resultDivName);
+	div.append(connect);
+	
+	jsPlumb.makeTarget(connect, {
+	  anchor: 'Continuous'
+	});
+	
+	jsPlumb.makeSource(connect, {
+	  parent: connect,
+	  anchor: 'Continuous'
+	});		
+	
+	jsPlumb.draggable(div, {
+	  containment: 'parent'
+	});	
+	
+	i++;     
+	});
 
-		
+}
+function createPanel(canvasArea) {
+	var panelName = "state"+panelCount;
+	newState = $('<div>').attr('id', 'state' + panelCount).addClass('item');
+	var title = $('<div>').addClass('title').text('Panel ' + panelCount);
+	var connect = $('<div>').addClass('connect');
+	jsPlumb.draggable(newState, {
+		  containment: 'parent'
+		});
+	newState.append(title);
+	$('#container').append(newState);
+	return panelName;
 }
 
-
+/*
 function createPanel(canvasArea) {
 	panelName = "panel-" + panelCount;
 	
@@ -152,7 +181,6 @@ function createPanel(canvasArea) {
 	   $(this).closest(".panel").remove();
 	});
 	
-	/*
 	$('.draggable').draggable();
 	
 	//$('.dialog-' + panelCount).dialog();
@@ -160,9 +188,12 @@ function createPanel(canvasArea) {
 	$( ".resizable-" + panelCount ).resizable({
 	  alsoResize: ".also-" + panelCount
 	});
-	*/
+	
 	return panelName;
 }
+*/
+
+
 
 //Create Canvas Overlay
 function createCanvasOverlay(color, canvasContainer)
@@ -210,12 +241,12 @@ jsPlumb.ready(function() {
 		
 		var title = $('<div>').addClass('title').text('State ' + i);
 		var connect = $('<div>').addClass('connect');
-		
+		var listitem = $('<div>').text('Hello');
 		newState.css({
 		  'top': e.pageY,
 		  'left': e.pageX
 		});
-		
+		connect.append(listitem);
 		newState.append(title);
 		newState.append(connect);
 		
