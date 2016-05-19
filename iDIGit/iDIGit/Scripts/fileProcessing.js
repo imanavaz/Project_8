@@ -151,9 +151,7 @@ function createPanel(canvasArea) {
 	newState = $('<div>').attr('id', 'state' + panelCount).addClass('item');
 	var title = $('<div>').addClass('title').text('Panel ' + panelCount);
 	var connect = $('<div>').addClass('connect');
-	jsPlumb.draggable(newState, {
-		  containment: 'parent'
-		});
+	jsPlumb.draggable(newState);
 	newState.append(title);
 	$('#container').append(newState);
 	return panelName;
@@ -236,6 +234,7 @@ function createCanvasOverlay(color, canvasContainer)
 
 jsPlumb.ready(function() {
 	jsPlumb.setContainer($('#container'));
+	/*
 	$('#container').dblclick(function(e) {
 		var newState = $('<div>').attr('id', 'state' + i).addClass('item');
 		
@@ -273,6 +272,7 @@ jsPlumb.ready(function() {
 		
 		i++;    
 	  });  
+	  */
 });
 
 
