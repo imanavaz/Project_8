@@ -11,6 +11,7 @@ var jg;
 var c;
 var ctx;
 var tempParent;
+var i = 0;
 
 $( document ).ready(function() {
     createCanvasOverlay('rgba(0,0,0,0)');
@@ -70,7 +71,14 @@ function processCSV(f)
 			
 			//== Foreach of the data
 			resultArray.forEach(myFunction);
-			
+			jsPlumb.ready(function() {
+		jsPlumb.makeSource($('.draggableItem'), {
+		connector: 'StateMachine'
+		});
+		jsPlumb.makeTarget($('.draggableItem'), {
+		anchor: 'Continuous'
+		});
+	});	
 			panelCount+=1;
 			//document.getElementById("drawing-area").innerHTML = results.meta.fields;
         }
@@ -93,6 +101,9 @@ function processTXT(f)
 function myFunction(item, index) {
 	//resultDiv.innerHTML = resultDiv.innerHTML + "<div class='panel panel-default col-sm-4'><div class='panel-body'><ul>";
 	resultDiv.innerHTML = resultDiv.innerHTML + "<li role='presentation' class='draggableItem active' id='item' style='z-index:999;' >" + item + "</li> " ;
+	
+	
+	/*
 	$('.draggableItem').draggable({snap: true ,
 		start: function( event, ui ) {
 			tempParent = $(this).closest(".fixed-panel");
@@ -113,6 +124,7 @@ function myFunction(item, index) {
 			ctx.stroke();
 		}
 	});
+	*/
 	//resultDiv.innerHTML = resultDiv.innerHTML + "</ul></div></div>";
 
 		
@@ -122,14 +134,16 @@ function myFunction(item, index) {
 function createPanel(canvasArea) {
 	panelName = "panel-" + panelCount;
 	
-	canvasArea.innerHTML = canvasArea.innerHTML + "<div style='' class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='nav nav-pills nav-stacked fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
+	canvasArea.innerHTML = canvasArea.innerHTML + "<div style='' class='panel panel-default col-sm-4 draggable resizable-" + panelCount + "'> <div class='panel-heading'> Data " + panelCount + " <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button> </div> <div class='panel-body also-" + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size & Location</button><ul id='" + panelName + "' class='nav nav-pills nav-stacked fixed-panel also-" + panelCount + "'> </ul> </div> </div> ";
 	//canvasArea.innerHTML = canvasArea.innerHTML + "<div id='panel-data' class='dialog-" + panelCount + "' title='Panel " + panelCount + "'><button type='button' class='btn btn-block showSize'>Get Size</button><ul id='" + panelName + "' class='fixed-panel'> </div>";
 	$(".showSize").on("click", function(){ 
 		alert(
 		"Height = " +
 		$(this).closest(".panel").height() + "px " +
 		"Width = " +
-		$(this).closest(".panel").width() + "px "
+		$(this).closest(".panel").width() + "px " +
+		"Location = x:" +
+		$(this).closest(".panel").offset().left + " ,y:" + $(this).closest(".panel").offset().top
 		
 		);
 	});
@@ -137,6 +151,8 @@ function createPanel(canvasArea) {
 	$(".clickable").on("click", function(){ 
 	   $(this).closest(".panel").remove();
 	});
+	
+	/*
 	$('.draggable').draggable();
 	
 	//$('.dialog-' + panelCount).dialog();
@@ -144,7 +160,7 @@ function createPanel(canvasArea) {
 	$( ".resizable-" + panelCount ).resizable({
 	  alsoResize: ".also-" + panelCount
 	});
-
+	*/
 	return panelName;
 }
 
@@ -186,5 +202,47 @@ function createCanvasOverlay(color, canvasContainer)
         }
 })();
 }
+
+jsPlumb.ready(function() {
+	jsPlumb.setContainer($('#container'));
+	$('#container').dblclick(function(e) {
+		var newState = $('<div>').attr('id', 'state' + i).addClass('item');
+		
+		var title = $('<div>').addClass('title').text('State ' + i);
+		var connect = $('<div>').addClass('connect');
+		
+		newState.css({
+		  'top': e.pageY,
+		  'left': e.pageX
+		});
+		
+		newState.append(title);
+		newState.append(connect);
+		
+		$('#container').append(newState);
+		
+		jsPlumb.makeTarget(newState, {
+		  anchor: 'Continuous'
+		});
+		
+		jsPlumb.makeSource(connect, {
+		  parent: newState,
+		  anchor: 'Continuous'
+		});		
+		
+		jsPlumb.draggable(newState, {
+		  containment: 'parent'
+		});
+
+		newState.dblclick(function(e) {
+		  jsPlumb.detachAllConnections($(this));
+		  $(this).remove();
+		  e.stopPropagation();
+		});		
+		
+		i++;    
+	  });  
+});
+
 
 
