@@ -6,7 +6,7 @@ var panelCount=1;
 var newState;
 var i = 0;
 var div;
-
+var panelTitle;
 
 
 
@@ -20,6 +20,8 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
     }
 
     var parts = file.name.split('.');
+    panelTitle = parts;
+
     var fileExt = parts[parts.length - 1];
         
     switch (fileExt.toLowerCase()) {
@@ -107,13 +109,27 @@ function createPanel(canvasArea) {
 	newState = $('<div>').attr('id', 'state' + panelCount).addClass('item').addClass('panel').addClass('panel-default');
 	var body = $('<div>').addClass('panel-body').attr('id', 'also' + panelCount);
 	var ulItem = $('<div>');
-	var title = $('<div>').addClass('panel-heading').text('Panel ' + panelCount);
+	var title = $('<div>').addClass('panel-heading').text(panelTitle);
 	body.append(ulItem);
-	title.append("<button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
-	title.append(" <button type='button' class='showSize info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
+	title.append(" <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
+	title.append(' <button type="button" class="btn btn-primary offToggle toggleDrag-'+panelCount+'" data-toggle="button">Drag OFF</button>');
+	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
+	jsPlumb.draggable(newState);
+	jsPlumb.setDraggable(newState, false);
+	/*jsPlumb.setDraggable(newState, false);
+	$( newState ).mousedown(function() {
+	  jsPlumb.setDraggable(newState, true);
+	  console.log("mouseover");
+	  $( newState ).trigger( "mouseup" );
+	$( newState ).trigger( "mousedown" );
+	});
+	$( newState ).mouseout(function() {
+	  jsPlumb.setDraggable(newState, false);
+	  console.log("mouseout");
+	});*/
 	newState.resizable({alsoResize: "#also"+panelCount});
 	body.resizable({containment: "#state"+panelCount});
-	jsPlumb.draggable(newState);
+	
 	newState.append(title);
 	newState.append(body);
 	newState.css("width","300px");
@@ -125,7 +141,21 @@ function createPanel(canvasArea) {
 	$(".clickable").on("click", function(){ 
 	   $(this).closest(".panel").remove();
 	});
-	$(".showSize").on("click", function(){ 
+	$(".toggleDrag-"+panelCount).on("click", function(){ 
+		//console.log("Toogle Click");
+	   if( $(this).hasClass("onToggle") ){
+		   $(this).removeClass("onToggle").addClass("offToggle");
+		   $(this).text('Drag OFF');
+		   jsPlumb.setDraggable(newState, false);
+		   //console.log("Toogle OFF");
+	   }else if( $(this).hasClass("offToggle") ){
+		   $(this).removeClass("offToggle").addClass("onToggle");
+		   jsPlumb.setDraggable(newState, true);
+		   $(this).text('Drag ON');
+		   //console.log("Toogle ON");
+	   }
+	});
+	$(".showSize-"+panelCount).on("click", function(){ 
 		alert(
 		"Height = " +
 		$(this).closest(".panel").height() + "px " +
