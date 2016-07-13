@@ -1,4 +1,5 @@
-﻿var contents;
+﻿//== Declare Variable 
+var contents;
 var w = 500;
 var h = 400;
 var resultDiv;
@@ -7,8 +8,8 @@ var newState;
 var i = 0;
 var div;
 var panelTitle;
-
-
+var counterConnections = 0;
+var dataJSON;
 
 
 function readSingleFile(eve) { //executes when a file is read by "import data" 
@@ -20,6 +21,7 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
     }
 
     var parts = file.name.split('.');
+	//Set panelTitle Variable as FileName
     panelTitle = parts;
 
     var fileExt = parts[parts.length - 1];
@@ -91,25 +93,57 @@ function printResult(item, index) {
 	div.append(connect);
 	
 	jsPlumb.makeTarget(connect, {
-	  anchor: 'Continuous'
+	  anchor: 'Continuous',
+	  parameters:{
+        "titleTarget":panelTitle[0],
+        "itemTarget":item
+		}
 	});
 	
 	jsPlumb.makeSource(connect, {
 	  parent: newState,
-	  anchor: 'Continuous'
+	  anchor: 'Continuous',
+	  parameters:{
+        "titleSource":panelTitle[0],
+        "itemSource":item
+		}
 	});		
+	
 	
 
 	i++;     
 	});
 
 }
+//When Connection was made , take each other parameters and process it
+jsPlumb.bind('connection',function(info,ev){
+    var con=info.connection;   //this is the new connection
+	var titleSource  = con.getParameter("titleSource");
+	var titleTarget  = con.getParameter("titleTarget");
+	var itemsource  = con.getParameter("itemSource");
+	var itemtarget  = con.getParameter("itemTarget");
+	dataJSON = '{ "connections" : [' +
+	'{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ]}';
+	
+	var obj = JSON.parse(dataJSON);
+	console.log(obj);
+});
+
+// When Download JSON
+function downloadJSON()
+{
+var element = document.createElement('a');
+element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
+element.setAttribute('download', "fileName.json");
+element.click();
+}
+	
 function createPanel(canvasArea) {
 	var panelName = "state"+panelCount;
 	newState = $('<div>').attr('id', 'state' + panelCount).addClass('item').addClass('panel').addClass('panel-default');
 	var body = $('<div>').addClass('panel-body').attr('id', 'also' + panelCount);
 	var ulItem = $('<div>');
-	var title = $('<div>').addClass('panel-heading').text(panelTitle);
+	var title = $('<div>').addClass('panel-heading').text(panelTitle[0]);
 	body.append(ulItem);
 	title.append(" <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
 	title.append(' <button type="button" class="btn btn-primary offToggle toggleDrag-'+panelCount+'" data-toggle="button">Drag OFF</button>');
