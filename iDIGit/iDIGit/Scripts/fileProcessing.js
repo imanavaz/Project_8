@@ -9,7 +9,8 @@ var i = 0;
 var div;
 var panelTitle;
 var counterConnections = 0;
-var dataJSON;
+var dataJSON="";
+var objConJSON;
 
 
 function readSingleFile(eve) { //executes when a file is read by "import data" 
@@ -122,18 +123,18 @@ jsPlumb.bind('connection',function(info,ev){
 	var titleTarget  = con.getParameter("titleTarget");
 	var itemsource  = con.getParameter("itemSource");
 	var itemtarget  = con.getParameter("itemTarget");
-	dataJSON = '{ "connections" : [' +
+	dataJSON += '{ "connections" : [' +
 	'{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ]}';
 	
-	var obj = JSON.parse(dataJSON);
-	console.log(obj);
+	objConJSON = JSON.parse(dataJSON);
+	//console.log(obj);
 });
 
 // When Download JSON
 function downloadJSON()
 {
 var element = document.createElement('a');
-element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
+element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(JSON.stringify(objConJSON)));
 element.setAttribute('download', "fileName.json");
 element.click();
 }
