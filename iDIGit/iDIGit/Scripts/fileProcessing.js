@@ -61,7 +61,7 @@ function processCSV(f)
 						
 			//== Create Panel in the canvas 
 			canvasArea = document.getElementById("container");
-			resultDivName = createPanel(canvasArea);
+			resultDivName = createPanel2(canvasArea);
 			
 			//== Take drawing area name to be inserted with content
 			resultDiv = document.getElementById(resultDivName);
@@ -90,8 +90,10 @@ function processTXT(f)
 function printResult(item, index) {
 	jsPlumb.ready(function() {
 	jsPlumb.setContainer($('#container'));
-	var connect = $('<li>').addClass('connect').text(item);
-	div.append(connect);
+	var tr = $('<tr>');
+	var connect = $('<td>').addClass('connect').text(item);
+	tr.append(connect);
+	div.append(tr);
 	
 	jsPlumb.makeTarget(connect, {
 	  anchor: 'Continuous',
@@ -109,14 +111,14 @@ function printResult(item, index) {
         "itemSource":item
 		}
 	});		
-	
-	
 
 	i++;     
 	});
 
 }
 //When Connection was made , take each other parameters and process it
+ 
+    
 jsPlumb.bind('connection',function(info,ev){
     var con=info.connection;   //this is the new connection
 	var titleSource  = con.getParameter("titleSource");
@@ -129,7 +131,6 @@ jsPlumb.bind('connection',function(info,ev){
 	objConJSON = JSON.parse(dataJSON);
 	//console.log(obj);
 });
-
 // When Download JSON
 function downloadJSON()
 {
@@ -151,17 +152,6 @@ function createPanel(canvasArea) {
 	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
 	jsPlumb.draggable(newState);
 	jsPlumb.setDraggable(newState, false);
-	/*jsPlumb.setDraggable(newState, false);
-	$( newState ).mousedown(function() {
-	  jsPlumb.setDraggable(newState, true);
-	  console.log("mouseover");
-	  $( newState ).trigger( "mouseup" );
-	$( newState ).trigger( "mousedown" );
-	});
-	$( newState ).mouseout(function() {
-	  jsPlumb.setDraggable(newState, false);
-	  console.log("mouseout");
-	});*/
 	newState.resizable({alsoResize: "#also"+panelCount});
 	body.resizable({containment: "#state"+panelCount});
 	
@@ -204,6 +194,30 @@ function createPanel(canvasArea) {
 	return panelName;
 }
 
+function createPanel2(canvasArea) {
+	var panelName = "state"+panelCount;
+	newState = $('<table>').attr('id', 'state' + panelCount).attr('border', 1).addClass('item').addClass('panel').addClass('table');
+	
+	var title = $('<th>').addClass('heading').text(panelTitle[0]);
+	var body = $('<tbody>').addClass('panel-body').attr('id', 'also' + panelCount);
+	div = body;
+	newState.append(title);
+	newState.append(body);
+	$('#container').append(newState);
+	newState.css("width","300px");
+	newState.css("overflow-y","scroll");
+	newState.css("height","300px");
+	newState.css("position","absolute");
+	
+	$(newState).resizable({
+        resize : function(event, ui) {            
+                jsPlumb.repaint(ui.helper);
+            }
+        });
+	jsPlumb.draggable(newState);
+		
+	return panelName;
+}
 
 
 jsPlumb.ready(function() {

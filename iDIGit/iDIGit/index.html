@@ -26,8 +26,9 @@
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   
-  
-  
+
+	
+	
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */ 
     .navbar {
@@ -110,7 +111,6 @@
 				<ul class="nav navbar-nav">
 					<li><a href="#" onclick="document.getElementById('import_file').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> IMPORT DATA </a></li>
 					<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
-					<li><a href="#" onclick="downloadJSON()"> <i class="glyphicon glyphicon-download" ></i> DOWNLOAD CONNECTIONS </a></li>
 				</ul>
 			</div>
 			<div class="navbar-nav navbar-right" >
@@ -126,7 +126,7 @@
 				<a href="#"><i class="glyphicon glyphicon-search" ></i> Search</a>
 			</li>
 			<li class="navstack">
-				<a href="#"><i class="glyphicon glyphicon-download-alt" ></i> Downloads</a>
+				<a href="#" onclick="downloadJSON()"> <i class="glyphicon glyphicon-download" ></i> Export Mapping </a>
 			</li>
 			<li class="navstack">
 				<a href="#"><i class="fa fa-file" ></i> Vector Illustrations</a>
@@ -155,6 +155,7 @@
 		</ul>
 	</div>
 	<div id="container">
+
 	<div class="container-fluid text-left" id="canvas-warp">    
 		<!--Canvas-->
 		<canvas id="myCanvas" >
