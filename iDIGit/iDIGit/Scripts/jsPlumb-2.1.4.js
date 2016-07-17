@@ -3491,14 +3491,19 @@
             var previousContainer = _container;
             _container = c;
             _containerDelegations.length = 0;
+            var eventAliases = {
+                "endpointclick":"endpointClick",
+                "endpointdblclick":"endpointDblClick"
+            };
 
-            var _oneDelegateHandler = function (id, e) {
+            var _oneDelegateHandler = function (id, e, componentType) {
                 var t = e.srcElement || e.target,
                     jp = (t && t.parentNode ? t.parentNode._jsPlumb : null) || (t ? t._jsPlumb : null) || (t && t.parentNode && t.parentNode.parentNode ? t.parentNode.parentNode._jsPlumb : null);
                 if (jp) {
                     jp.fire(id, jp, e);
+                    var alias = componentType ? eventAliases[componentType + id] || id : id;
                     // jsplumb also fires every event coming from components/overlays. That's what the test for `jp.component` is for.
-                    _currentInstance.fire(id, jp.component || jp, e);
+                    _currentInstance.fire(alias, jp.component || jp, e);
                 }
             };
 
@@ -3513,15 +3518,16 @@
             // done by the renderer (although admittedly from 2.0 onwards we're not supporting vml anymore)
             var _oneDelegate = function (id) {
                 // connections.
-                _addOneDelegate(id, ".jsplumb-connector > *", function (e) {
+                _addOneDelegate(id, ".jsplumb-connector", function (e) {
                     _oneDelegateHandler(id, e);
                 });
                 // endpoints. note they can have an enclosing div, or not.
-                _addOneDelegate(id, ".jsplumb-endpoint, .jsplumb-endpoint > *, .jsplumb-endpoint svg *", function (e) {
-                    _oneDelegateHandler(id, e);
+                //_addOneDelegate(id, ".jsplumb-endpoint, .jsplumb-endpoint > *, .jsplumb-endpoint svg *", function (e) {
+                _addOneDelegate(id, ".jsplumb-endpoint", function (e) {
+                    _oneDelegateHandler(id, e, "endpoint");
                 });
                 // overlays
-                _addOneDelegate(id, ".jsplumb-overlay, .jsplumb-overlay *", function (e) {
+                _addOneDelegate(id, ".jsplumb-overlay", function (e) {
                     _oneDelegateHandler(id, e);
                 });
             };
@@ -3674,16 +3680,11 @@
                                 var dragEvent = jsPlumb.dragEvents.drag,
                                     stopEvent = jsPlumb.dragEvents.stop,
                                     startEvent = jsPlumb.dragEvents.start,
-                                    _del = _currentInstance.getElement(element),
-                                    _ancestor = _currentInstance.getDragManager().getDragAncestor(_del),
-                                    _noOffset = {left: 0, top: 0},
-                                    _ancestorOffset = _noOffset,
                                     _started = false;
 
                                 _manage(id, element);
 
                                 options[startEvent] = _ju.wrap(options[startEvent], function () {
-                                    _ancestorOffset = _ancestor != null ? _currentInstance.getOffset(_ancestor) : _noOffset;
                                     _currentInstance.setHoverSuspended(true);
                                     _currentInstance.select({source: element}).addClass(_currentInstance.elementDraggingClass + " " + _currentInstance.sourceElementDraggingClass, true);
                                     _currentInstance.select({target: element}).addClass(_currentInstance.elementDraggingClass + " " + _currentInstance.targetElementDraggingClass, true);
@@ -3697,10 +3698,6 @@
                                     // differs from getUIPosition so much
                                     var ui = _currentInstance.getUIPosition(arguments, _currentInstance.getZoom());
                                     if (ui != null) {
-                                        // adjust by ancestor offset if there is one: this is for the case that a draggable
-                                        // is contained inside some other element that is not the Container.
-                                        ui.left += _ancestorOffset.left;
-                                        ui.top += _ancestorOffset.top;
                                         _draw(element, ui, null, true);
                                         if (_started) _currentInstance.addClass(element, "jsplumb-dragged");
                                         _started = true;
@@ -3722,7 +3719,6 @@
                                     for (var i = 0; i < elements.length; i++)
                                         _one(elements[i]);
 
-                                    // this is common across all
                                     _started = false;
                                     _currentInstance.setHoverSuspended(false);
                                     _currentInstance.setConnectionBeingDragged(false);
@@ -4530,13 +4526,8 @@
                     fireDetachEvent(c, params.fireEvent === false ? false : !c.pending, params.originalEvent);
                     var doNotCleanup = params.deleteAttachedObjects == null ? null : !params.deleteAttachedObjects;
 
-                    // SP GROUPS. this works but blows up lots of original tests
                     c.endpoints[0].detachFromConnection(c, null, doNotCleanup);
                     c.endpoints[1].detachFromConnection(c, null, doNotCleanup);
-
-                    // SP GROUPS. this does not work but makes all the original tests work.
-                    //c.endpoints[0].detachFromConnection(c);
-                    //c.endpoints[1].detachFromConnection(c);
 
                     c.cleanup(true);
                     c.destroy(true);
@@ -6712,6 +6703,7 @@
                     var c = component.getCachedTypeItem("overlay", t.overlays[i][1].id);
                     if (c != null) {
                         c.reattach(component._jsPlumb.instance);
+                        c.setVisible(true);
                         // maybe update from data, if there were parameterised values for instance.
                         c.updateFrom(t.overlays[i][1]);
                         component._jsPlumb.overlays[c.id] = c;
@@ -6782,6 +6774,7 @@
         removeOverlay: function (overlayId, dontCleanup) {
             var o = this._jsPlumb.overlays[overlayId];
             if (o) {
+                o.setVisible(false);
                 if (!dontCleanup && o.cleanup) o.cleanup();
                 delete this._jsPlumb.overlays[overlayId];
                 if (this._jsPlumb.overlayPositions)
@@ -11857,13 +11850,18 @@
                     _jsPlumb.fire(EVT_CHILD_ADDED, {group: self, el: __el});
                 }
             });
+
+            _jsPlumb.getGroupManager().updateConnectionsForGroup(self);
         };
-        this.remove = function(el, manipulateDOM, doNotFireEvent) {
+
+        this.remove = function(el, manipulateDOM, doNotFireEvent, doNotUpdateConnections) {
+
             _each(el, function(__el) {
                 delete __el._jsPlumbGroup;
                 _ju.removeWithFunction(elements, function(e) {
                     return e === __el;
                 });
+
                 if (manipulateDOM) {
                     try { self.getEl().removeChild(__el); }
                     catch (e) {
@@ -11875,12 +11873,16 @@
                     _jsPlumb.fire(EVT_CHILD_REMOVED, {group: self, el: __el});
                 }
             });
+            if (!doNotUpdateConnections) {
+                _jsPlumb.getGroupManager().updateConnectionsForGroup(self);
+            }
         };
-        this.removeAll = function() {
-            for (var i = 0; i < elements.length; i++) {
-                _jsPlumb.remove(elements[i]);
+        this.removeAll = function(manipulateDOM, doNotFireEvent) {
+            for (var i = 0, l = elements.length; i < l; i++) {
+                self.remove(elements[0], manipulateDOM, doNotFireEvent, true);
             }
             elements.length = 0;
+            _jsPlumb.getGroupManager().updateConnectionsForGroup(self);
         };
         this.orphanAll = function() {
             for (var i = 0; i < elements.length; i++) {
@@ -11956,6 +11958,7 @@
         // unbind the group specific drag/revert handlers.
         //
         function _unbindDragHandlers(_el) {
+            if (!_el._katavorioDrag) return;
             if (prune || orphan) {
                 _el._katavorioDrag.off(STOP, _pruneOrOrphan);
             }
@@ -11966,6 +11969,7 @@
         }
 
         function _bindDragHandlers(_el) {
+            if (!_el._katavorioDrag) return;
             if (prune || orphan) {
                 _el._katavorioDrag.on(STOP, _pruneOrOrphan);
             }

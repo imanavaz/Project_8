@@ -11,7 +11,15 @@ var panelTitle;
 var counterConnections = 0;
 var dataJSON="";
 var objConJSON;
+var instance;
 
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+jsPlumb.ready(function() {
+instance = window.jsp = jsPlumb.getInstance({/*Drag options and connection overlays*/});
+});
 
 function readSingleFile(eve) { //executes when a file is read by "import data" 
 
@@ -87,16 +95,26 @@ function processTXT(f)
     reader.readAsText(f);
 }
 
+
 function printResult(item, index) {
 	jsPlumb.ready(function() {
 	jsPlumb.setContainer($('#container'));
 	var tr = $('<tr>');
-	var connect = $('<td>').addClass('connect').text(item);
+	var connect = $('<td>').addClass('connect').text(item).attr('data-content','this is the content');
+	var target = $('<td>').addClass('connect');
+	var img = document.createElement("IMG");
+    img.src = "Images/hashtag.png";
+    $(target).html(img);
+	target.css("width","50px");
+	tr.append(target);
 	tr.append(connect);
 	div.append(tr);
+	$(connect).popover({ trigger: "hover" });
 	
-	jsPlumb.makeTarget(connect, {
+	jsPlumb.makeTarget(target, {
+		parent: newState,
 	  anchor: 'Continuous',
+	  MaxConnections : 1,
 	  parameters:{
         "titleTarget":panelTitle[0],
         "itemTarget":item
@@ -105,6 +123,7 @@ function printResult(item, index) {
 	
 	jsPlumb.makeSource(connect, {
 	  parent: newState,
+	  MaxConnections : 1,
 	  anchor: 'Continuous',
 	  parameters:{
         "titleSource":panelTitle[0],
@@ -128,14 +147,14 @@ jsPlumb.bind('connection',function(info,ev){
 	dataJSON += '{ "connections" : [' +
 	'{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ]}';
 	
-	objConJSON = JSON.parse(dataJSON);
-	//console.log(obj);
+	//objConJSON = JSON.parse(dataJSON);
+	console.log(dataJSON);
 });
 // When Download JSON
 function downloadJSON()
 {
 var element = document.createElement('a');
-element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(JSON.stringify(objConJSON)));
+element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
 element.setAttribute('download', "fileName.json");
 element.click();
 }
@@ -196,34 +215,42 @@ function createPanel(canvasArea) {
 
 function createPanel2(canvasArea) {
 	var panelName = "state"+panelCount;
-	newState = $('<table>').attr('id', 'state' + panelCount).attr('border', 1).addClass('item').addClass('panel').addClass('table');
-	
-	var title = $('<th>').addClass('heading').text(panelTitle[0]);
-	var body = $('<tbody>').addClass('panel-body').attr('id', 'also' + panelCount);
+	newState = $('<table>').attr('id', 'state' + panelCount).addClass('item').addClass('panel').addClass('table').addClass('table-responsive').addClass('table-condensed');
+	var thead = $('<thead>');
+	var title = $('<th>').attr('colspan','2').addClass('heading').text(panelTitle[0]);
+	var body = $('<tbody>').addClass('').addClass('').attr('id', 'also' + panelCount).addClass('table-hover');
 	div = body;
-	newState.append(title);
+	title.append(" <button type='button' class='close clickClose' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
+	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i>i</i></span></button>");
+	title.append(" <button type='button' class='info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
+	thead.append(title);
+	newState.append(thead);
 	newState.append(body);
 	$('#container').append(newState);
 	newState.css("width","300px");
-	newState.css("overflow-y","scroll");
-	newState.css("height","300px");
-	newState.css("position","absolute");
-	
-	$(newState).resizable({
-        resize : function(event, ui) {            
-                jsPlumb.repaint(ui.helper);
-            }
-        });
+	newState.css("overflow","auto");
+	newState.css("max-height","300px");
+	newState.css("z-index:-1;");
 	jsPlumb.draggable(newState);
+	
+	$(".clickClose").on("click", function(){ 
+	   $(this).closest(".panel").remove();
+	});
+	$(".showSize-"+panelCount).on("click", function(){ 
+		alert(
+		"Height = " +
+		$(this).closest(".panel").height() + "px " +
+		"Width = " +
+		$(this).closest(".panel").width() + "px " +
+		"Location = x:" +
+		$(this).closest(".panel").offset().left + " ,y:" + $(this).closest(".panel").offset().top
 		
+		);
+	});
 	return panelName;
 }
 
 
-jsPlumb.ready(function() {
-	jsPlumb.setContainer($('#container'));
-
-});
 
 
 

@@ -16,7 +16,7 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
   <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
-  <script type="text/javascript" src="Scripts/jsPlumb-2.1.1.js"></script>
+  <script type="text/javascript" src="Scripts/jsPlumb-2.1.4.js"></script>
 	
   <!--My Code-->
   <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
@@ -98,6 +98,30 @@
 	  background-color: white;
 	  cursor: pointer;
 	}
+	
+	/*
+	table tbody, table thead
+	{
+		display: block;
+	}
+
+	table tbody 
+	{
+	   overflow: auto;
+	   height: 100px;
+	}
+
+	table {
+		width: 350px; 
+	}
+
+	th
+	{
+		width: 75px;
+	}
+	*/
+}
+	
   </style>
 </head>
 
@@ -109,8 +133,7 @@
 			</div>
 			<div class="navbar-nav" >
 				<ul class="nav navbar-nav">
-					<li><a href="#" onclick="document.getElementById('import_file').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> IMPORT DATA </a></li>
-					<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
+					
 				</ul>
 			</div>
 			<div class="navbar-nav navbar-right" >
@@ -125,6 +148,10 @@
 			<li class="navstack">
 				<a href="#"><i class="glyphicon glyphicon-search" ></i> Search</a>
 			</li>
+			<li class="navstack">
+				<a href="#" onclick="document.getElementById('import_file').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> Import Data </a>
+			</li>
+					<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
 			<li class="navstack">
 				<a href="#" onclick="downloadJSON()"> <i class="glyphicon glyphicon-download" ></i> Export Mapping </a>
 			</li>
