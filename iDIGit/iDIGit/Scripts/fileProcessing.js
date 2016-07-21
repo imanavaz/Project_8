@@ -226,8 +226,6 @@ function redoConnections(){
 	  source: sourceRedo, 
 	  target: targetRedo
 	});
-	sourceRedo="";
-	targetRedo="";
 	$('.redoButton').attr('disabled','disabled');
 }
 	
