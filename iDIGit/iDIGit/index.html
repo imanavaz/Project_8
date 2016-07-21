@@ -205,9 +205,13 @@
 	
 <div class="navbar navbar-default navbar-fixed-bottom footerPanel hide">
     <div class="container">
+	  <a href="#" onclick="undoConnections()" class="navbar-btn btn-warning btn undoButton" disabled>
+      <span class="glyphicon glyphicon-repeat"></span>  Undo </a>
+	  <a href="#" onclick="redoConnections()" class="navbar-btn btn-primary btn redoButton" disabled>
+      <span class="glyphicon glyphicon-refresh"></span>  Redo </a> 
       <a href="#" onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right">
       <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </a> 
-	  <a href="#" onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right"> 
+	  <a href="#" onclick="downloadJSON2()" class="navbar-btn btn-success btn pull-right"> 
       <span class="glyphicon glyphicon-download"></span>  Export Mapping </a>
     </div>
 </div>

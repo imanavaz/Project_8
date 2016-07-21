@@ -13,6 +13,9 @@ var dataJSON="";
 var objConJSON;
 var instance;
 var panelexist=0;
+var connUndo;
+var sourceRedo;
+var targetRedo;
 
 $(function () {
   $('[data-toggle="popover"]').popover()
@@ -124,7 +127,7 @@ function printResult(item, index) {
 	$(connect).popover({ trigger: "hover" });
 	
 	jsPlumb.makeTarget(target, {
-		parent: newState,
+	  parent: newState,
 	  anchor: 'Continuous',
 	  MaxConnections : 1,
 	  parameters:{
@@ -135,6 +138,7 @@ function printResult(item, index) {
 	
 	jsPlumb.makeSource(connect, {
 	  parent: newState,
+	  isSource:true,
 	  MaxConnections : 1,
 	  anchor: 'Continuous',
 	  parameters:{
@@ -156,24 +160,75 @@ jsPlumb.bind('connection',function(info,ev){
 	var titleTarget  = con.getParameter("titleTarget");
 	var itemsource  = con.getParameter("itemSource");
 	var itemtarget  = con.getParameter("itemTarget");
+	connUndo = con.sourceId;
+	sourceRedo = con.sourceId;
+	targetRedo = con.targetId;
+	
 	
 	if(dataJSON==""){
-		dataJSON += '{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+		dataJSON += '{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
 	}else
 	{
-		dataJSON += ',{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+		dataJSON += ',{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
 	}
+	$('.undoButton').removeAttr('disabled');
 	//objConJSON = JSON.parse(dataJSON);
-	console.log(dataJSON);
+	//console.log(connUndo);
 });
-// When Download JSON
+// When Download JSON V1
 function downloadJSON()
 {
 	dataJSON = '{ "connections" : [' + dataJSON + ']}';
-var element = document.createElement('a');
-element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
-element.setAttribute('download', "fileName.json");
-element.click();
+	var element = document.createElement('a');
+
+	element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
+	element.setAttribute('download', "fileName.json");
+	element.click();
+}
+
+// When Download JSON v2
+function downloadJSON2(){
+	var con=jsPlumb.getAllConnections();
+	var dataJSON2="";
+	for(var i=0;i<con.length;i++)
+	{
+		var titleSource  = con[i].getParameter("titleSource");
+		var titleTarget  = con[i].getParameter("titleTarget");
+		var itemsource  = con[i].getParameter("itemSource");
+		var itemtarget  = con[i].getParameter("itemTarget");
+		if(dataJSON2==""){
+			dataJSON2 += '{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+		}else
+		{
+			dataJSON2 += ',{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+		}
+	}
+	dataJSON2 = '{ "connections" : [' + dataJSON2 + ']}';
+	var element = document.createElement('a');
+
+	element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON2));
+	element.setAttribute('download', "fileName.json");
+	element.click();
+	
+}
+
+function undoConnections(){
+	jsPlumb.detachAllConnections(connUndo);
+	connUndo = "";
+	$('.redoButton').removeAttr('disabled');
+	$('.undoButton').attr('disabled','disabled');
+}
+
+function redoConnections(){
+	//console.log(sourceRedo);
+	//console.log(targetRedo);
+	jsPlumb.connect({
+	  source: sourceRedo, 
+	  target: targetRedo
+	});
+	sourceRedo="";
+	targetRedo="";
+	$('.redoButton').attr('disabled','disabled');
 }
 	
 function createPanel(canvasArea) {
