@@ -12,6 +12,7 @@ var counterConnections = 0;
 var dataJSON="";
 var objConJSON;
 var instance;
+var panelexist=0;
 
 $(function () {
   $('[data-toggle="popover"]').popover()
@@ -95,6 +96,16 @@ function processTXT(f)
     reader.readAsText(f);
 }
 
+function detachAllConnections()
+{
+	if (confirm('Are you sure want to detach all connections?')) {
+		dataJSON="";
+		jsPlumb.detachEveryConnection();
+	} else {
+		// Do nothing!
+	}
+	
+}
 
 function printResult(item, index) {
 	jsPlumb.ready(function() {
@@ -106,6 +117,7 @@ function printResult(item, index) {
     img.src = "Images/hashtag.png";
     $(target).html(img);
 	target.css("width","50px");
+	img.style.width = '17.5px';
 	tr.append(target);
 	tr.append(connect);
 	div.append(tr);
@@ -144,15 +156,20 @@ jsPlumb.bind('connection',function(info,ev){
 	var titleTarget  = con.getParameter("titleTarget");
 	var itemsource  = con.getParameter("itemSource");
 	var itemtarget  = con.getParameter("itemTarget");
-	dataJSON += '{ "connections" : [' +
-	'{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ]}';
 	
+	if(dataJSON==""){
+		dataJSON += '{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+	}else
+	{
+		dataJSON += ',{ "'+ titleSource +'":"'+itemtarget+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+	}
 	//objConJSON = JSON.parse(dataJSON);
 	console.log(dataJSON);
 });
 // When Download JSON
 function downloadJSON()
 {
+	dataJSON = '{ "connections" : [' + dataJSON + ']}';
 var element = document.createElement('a');
 element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
 element.setAttribute('download', "fileName.json");
@@ -235,6 +252,11 @@ function createPanel2(canvasArea) {
 	
 	$(".clickClose").on("click", function(){ 
 	   $(this).closest(".panel").remove();
+	   panelexist -=1;
+	   if(panelexist <1){
+		   $(".footerPanel").addClass('hide');
+	   }
+		
 	});
 	$(".showSize-"+panelCount).on("click", function(){ 
 		alert(
@@ -247,6 +269,9 @@ function createPanel2(canvasArea) {
 		
 		);
 	});
+	
+	panelexist +=1;
+	$(".footerPanel").removeClass('hide');
 	return panelName;
 }
 
