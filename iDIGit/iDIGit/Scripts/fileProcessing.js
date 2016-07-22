@@ -13,9 +13,10 @@ var dataJSON="";
 var objConJSON;
 var instance;
 var panelexist=0;
-var connUndo;
-var sourceRedo;
-var targetRedo;
+var connUndo = [];
+var sourceRedo = [];
+var targetRedo = [];
+var URCount=0; //Undo Redo Count
 
 $(function () {
   $('[data-toggle="popover"]').popover()
@@ -73,7 +74,7 @@ function processCSV(f)
 						
 			//== Create Panel in the canvas 
 			canvasArea = document.getElementById("container");
-			resultDivName = createPanel2(canvasArea);
+			resultDivName = createPanel(canvasArea);
 			
 			//== Take drawing area name to be inserted with content
 			resultDiv = document.getElementById(resultDivName);
@@ -114,8 +115,8 @@ function printResult(item, index) {
 	jsPlumb.ready(function() {
 	jsPlumb.setContainer($('#container'));
 	var tr = $('<tr>');
-	var connect = $('<td>').addClass('connect').text(item).attr('data-content','this is the content');
-	var target = $('<td>').addClass('connect');
+	var connect = $('<td>').addClass('connect').text(item).attr('data-content','this is the content').addClass('');
+	var target = $('<td>').addClass('connect').addClass('');
 	var img = document.createElement("IMG");
     img.src = "Images/hashtag.png";
     $(target).html(img);
@@ -160,9 +161,9 @@ jsPlumb.bind('connection',function(info,ev){
 	var titleTarget  = con.getParameter("titleTarget");
 	var itemsource  = con.getParameter("itemSource");
 	var itemtarget  = con.getParameter("itemTarget");
-	connUndo = con.sourceId;
-	sourceRedo = con.sourceId;
-	targetRedo = con.targetId;
+	connUndo[URCount] = con.sourceId;
+	sourceRedo[URCount] = con.sourceId;
+	targetRedo[URCount] = con.targetId;
 	
 	
 	if(dataJSON==""){
@@ -172,22 +173,13 @@ jsPlumb.bind('connection',function(info,ev){
 		dataJSON += ',{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
 	}
 	$('.undoButton').removeAttr('disabled');
+	URCount +=1;
 	//objConJSON = JSON.parse(dataJSON);
 	//console.log(connUndo);
 });
-// When Download JSON V1
-function downloadJSON()
-{
-	dataJSON = '{ "connections" : [' + dataJSON + ']}';
-	var element = document.createElement('a');
-
-	element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON));
-	element.setAttribute('download', "fileName.json");
-	element.click();
-}
 
 // When Download JSON v2
-function downloadJSON2(){
+function downloadJSON(){
 	var con=jsPlumb.getAllConnections();
 	var dataJSON2="";
 	for(var i=0;i<con.length;i++)
@@ -213,82 +205,37 @@ function downloadJSON2(){
 }
 
 function undoConnections(){
-	jsPlumb.detachAllConnections(connUndo);
-	connUndo = "";
+	jsPlumb.detachAllConnections(connUndo[URCount-1]);
+	connUndo[URCount] = "";
 	$('.redoButton').removeAttr('disabled');
-	$('.undoButton').attr('disabled','disabled');
+	
+	if(URCount<=1){
+		$('.undoButton').attr('disabled','disabled');
+		URCount -=1;
+	}else{
+		URCount -=1;
+	}
+	
 }
 
 function redoConnections(){
 	//console.log(sourceRedo);
 	//console.log(targetRedo);
 	jsPlumb.connect({
-	  source: sourceRedo, 
-	  target: targetRedo
+	  source: sourceRedo[URCount], 
+	  target: targetRedo[URCount]
 	});
-	$('.redoButton').attr('disabled','disabled');
+	//$('.redoButton').attr('disabled','disabled');
 }
 	
+
+
 function createPanel(canvasArea) {
 	var panelName = "state"+panelCount;
-	newState = $('<div>').attr('id', 'state' + panelCount).addClass('item').addClass('panel').addClass('panel-default');
-	var body = $('<div>').addClass('panel-body').attr('id', 'also' + panelCount);
-	var ulItem = $('<div>');
-	var title = $('<div>').addClass('panel-heading').text(panelTitle[0]);
-	body.append(ulItem);
-	title.append(" <button type='button' class='close clickable' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
-	title.append(' <button type="button" class="btn btn-primary offToggle toggleDrag-'+panelCount+'" data-toggle="button">Drag OFF</button>');
-	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
-	jsPlumb.draggable(newState);
-	jsPlumb.setDraggable(newState, false);
-	newState.resizable({alsoResize: "#also"+panelCount});
-	body.resizable({containment: "#state"+panelCount});
-	
-	newState.append(title);
-	newState.append(body);
-	newState.css("width","300px");
-	body.css("overflow-y","scroll");
-	body.css("height","300px");
-	div = ulItem;
-	$('#container').append(newState);
-	
-	$(".clickable").on("click", function(){ 
-	   $(this).closest(".panel").remove();
-	});
-	$(".toggleDrag-"+panelCount).on("click", function(){ 
-		//console.log("Toogle Click");
-	   if( $(this).hasClass("onToggle") ){
-		   $(this).removeClass("onToggle").addClass("offToggle");
-		   $(this).text('Drag OFF');
-		   jsPlumb.setDraggable(newState, false);
-		   //console.log("Toogle OFF");
-	   }else if( $(this).hasClass("offToggle") ){
-		   $(this).removeClass("offToggle").addClass("onToggle");
-		   jsPlumb.setDraggable(newState, true);
-		   $(this).text('Drag ON');
-		   //console.log("Toogle ON");
-	   }
-	});
-	$(".showSize-"+panelCount).on("click", function(){ 
-		alert(
-		"Height = " +
-		$(this).closest(".panel").height() + "px " +
-		"Width = " +
-		$(this).closest(".panel").width() + "px " +
-		"Location = x:" +
-		$(this).closest(".panel").offset().left + " ,y:" + $(this).closest(".panel").offset().top
-		
-		);
-	});
-	return panelName;
-}
-
-function createPanel2(canvasArea) {
-	var panelName = "state"+panelCount;
-	newState = $('<table>').attr('id', 'state' + panelCount).addClass('item').addClass('panel').addClass('table').addClass('table-responsive').addClass('table-condensed');
+	newState = $('<table>').attr('id', 'state' + panelCount).addClass('item').addClass('table').addClass('table-responsive').addClass('table-condensed').addClass('table-hover');
 	var thead = $('<thead>');
 	var title = $('<th>').attr('colspan','2').addClass('heading').text(panelTitle[0]);
-	var body = $('<tbody>').addClass('').addClass('').attr('id', 'also' + panelCount).addClass('table-hover');
+	var body = $('<tbody>').addClass('').addClass('').attr('id', 'also' + panelCount).addClass('');
 	div = body;
 	title.append(" <button type='button' class='close clickClose' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
 	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i>i</i></span></button>");
@@ -297,14 +244,27 @@ function createPanel2(canvasArea) {
 	newState.append(thead);
 	newState.append(body);
 	$('#container').append(newState);
-	newState.css("width","300px");
-	newState.css("overflow","auto");
-	newState.css("max-height","300px");
-	newState.css("z-index:-1;");
-	jsPlumb.draggable(newState);
+	//body.css("height","150px");
+	//body.css("overflow","auto");
+	newState.css("width","250px");
+	newState.css("height","250px");
+	newState.css("overflow-y","scroll");
+	//newState.css("z-index:-1;");
+	jsPlumb.draggable(newState,{
+		filter:".ui-resizable-handle"
+	});
+	newState.resizable();
 	
+	$( newState ).resize(function() {
+	   jsPlumb.repaintEverything();
+	});
+	
+	$( body ).scroll(function() {
+	  jsPlumb.repaintEverything();
+	  //alert('scroll');
+	});
 	$(".clickClose").on("click", function(){ 
-	   $(this).closest(".panel").remove();
+	   $(this).closest(".table").remove();
 	   panelexist -=1;
 	   if(panelexist <1){
 		   $(".footerPanel").addClass('hide');
@@ -314,11 +274,11 @@ function createPanel2(canvasArea) {
 	$(".showSize-"+panelCount).on("click", function(){ 
 		alert(
 		"Height = " +
-		$(this).closest(".panel").height() + "px " +
+		$(this).closest(".table").height() + "px " +
 		"Width = " +
-		$(this).closest(".panel").width() + "px " +
+		$(this).closest(".table").width() + "px " +
 		"Location = x:" +
-		$(this).closest(".panel").offset().left + " ,y:" + $(this).closest(".panel").offset().top
+		$(this).closest(".table").offset().left + " ,y:" + $(this).closest(".table").offset().top
 		
 		);
 	});
@@ -327,6 +287,7 @@ function createPanel2(canvasArea) {
 	$(".footerPanel").removeClass('hide');
 	return panelName;
 }
+
 
 
 
