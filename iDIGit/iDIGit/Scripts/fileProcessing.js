@@ -22,9 +22,7 @@ $(function () {
   $('[data-toggle="popover"]').popover()
 })
 
-jsPlumb.ready(function() {
-instance = window.jsp = jsPlumb.getInstance({/*Drag options and connection overlays*/});
-});
+
 
 function readSingleFile(eve) { //executes when a file is read by "import data" 
 
@@ -46,6 +44,9 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
             return;
         case ('txt'):
             processTXT(file);
+            return;
+		case ('json'):
+            processJSON(file);
             return;
     }
 }
@@ -96,8 +97,50 @@ function processTXT(f)
         contents = e.target.result;
         console.log(contents);
     };
-
+	
     reader.readAsText(f);
+}
+
+function processJSON(f)
+{
+    var vJSONImport;
+	//alert("LoadJSON Success");
+	Papa.parse(f, {
+        dynamicTyping: true,
+        complete: function (results) {
+            vJSONImport = JSON.parse(results.data[0]);
+            //console.log(vJSONImport);
+			vJSONImport = vJSONImport["connections"];
+			//console.log(vJSONImport);
+			
+			for(var i=0;i<vJSONImport.length;i++){
+				var data = vJSONImport[i];
+				var y=0;
+				var sourceDiv;
+				var targetDiv;
+				
+				for (var k in data) {
+					if (data.hasOwnProperty(k)) {
+						if(y==0){
+							sourceDiv = "source_" + k + "_" + data[k];
+						}else if(y==1){
+							targetDiv = "target_" + k + "_" + data[k];
+						}
+					   
+					}
+					y+=1;
+				}
+				jsPlumb.connect({
+				  source: sourceDiv, 
+				  target: targetDiv
+				});
+				
+			}
+			
+		}
+     });
+    
+	
 }
 
 function detachAllConnections()
@@ -127,6 +170,9 @@ function printResult(item, index) {
 	div.append(tr);
 	$(connect).popover({ trigger: "hover" });
 	
+	target.attr('id', "target_" + panelTitle[0] + "_" + item);
+	connect.attr('id', "source_" + panelTitle[0] + "_" + item);
+	
 	jsPlumb.makeTarget(target, {
 	  parent: newState,
 	  anchor: 'Continuous',
@@ -147,7 +193,14 @@ function printResult(item, index) {
         "itemSource":item
 		}
 	});		
-
+	
+	
+	
+	//jsPlumb.select(target).setLabel("target_" + panelTitle[0] + "_" + item);
+	//jsPlumb.select(connect).setLabel("source_" + panelTitle[0] + "_" + item);
+	//jsPlumb.setId(target, panelTitle[0] + "_" + item);
+	//jsPlumb.setId(connect, panelTitle[0] + "_" + item);
+	//console.log("source_" + panelTitle[0] + "_" + item);
 	i++;     
 	});
 
@@ -175,7 +228,8 @@ jsPlumb.bind('connection',function(info,ev){
 	$('.undoButton').removeAttr('disabled');
 	URCount +=1;
 	//objConJSON = JSON.parse(dataJSON);
-	//console.log(connUndo);
+	//console.log(jsPlumb.select("source_Population_AreaCode").getParameter("titleSource"));
+	console.log(connUndo);
 });
 
 // When Download JSON v2
@@ -269,7 +323,7 @@ function createPanel(canvasArea) {
 	   if(panelexist <1){
 		   $(".footerPanel").addClass('hide');
 	   }
-		
+		//jsPlumb.repaintEverything();
 	});
 	$(".showSize-"+panelCount).on("click", function(){ 
 		alert(
@@ -282,6 +336,7 @@ function createPanel(canvasArea) {
 		
 		);
 	});
+	
 	
 	panelexist +=1;
 	$(".footerPanel").removeClass('hide');

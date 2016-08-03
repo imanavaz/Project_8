@@ -55,10 +55,14 @@
 			<li class="navstack">
 				<a href="#" onclick="document.getElementById('import_file').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> Import Data </a>
 			</li>
-					<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
+			<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
 			<li class="navstack">
 				<a href="#" onclick="downloadJSON()"> <i class="glyphicon glyphicon-download" ></i> Export Mapping </a>
 			</li>
+			<li class="navstack">
+				<a href="#" onclick="document.getElementById('import_mapping').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> Import Mapping </a>
+			</li>
+			<input class="hidden" type="file" id="import_mapping" accept=".json" name="import_mapping"  multiple /> 
 			<li class="navstack">
 				<a href="#"><i class="fa fa-file" ></i> Vector Illustrations</a>
 			</li>
@@ -99,6 +103,7 @@
 	</div>
 	<script>
         document.getElementById('import_file').addEventListener('change', readSingleFile, false);
+        document.getElementById('import_mapping').addEventListener('change', readSingleFile, false);
     </script>
 
 
