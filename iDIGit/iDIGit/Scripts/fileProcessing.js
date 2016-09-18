@@ -18,9 +18,19 @@ var sourceRedo = [];
 var targetRedo = [];
 var URCount=0; //Undo Redo Count
 
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
+
+$( document ).ready(function() {
+    $('[data-toggle="popover"]').popover();
+    $( "#sideBarSortable" ).sortable();
+    $( "#sideBarSortable" ).disableSelection();
+	$('.circleBase').center();
+	jsPlumb.makeTarget($('.circleBase'), {
+	  anchor: 'Continuous',
+	  MaxConnections : 1
+	});
+});
+
+
 
 
 
@@ -75,13 +85,13 @@ function processCSV(f)
 						
 			//== Create Panel in the canvas 
 			canvasArea = document.getElementById("container");
-			resultDivName = createPanel(canvasArea);
-			
+			//resultDivName = createPanel(canvasArea);
+			resultDivName = createSideBarPanel(canvasArea);
 			//== Take drawing area name to be inserted with content
-			resultDiv = document.getElementById(resultDivName);
+			//resultDiv = document.getElementById(resultDivName);
 			
 			//== Foreach of the data
-			resultArray.forEach(printResult);
+			//resultArray.forEach(printResult);
 			
 			panelCount+=1;
         }
@@ -156,55 +166,56 @@ function detachAllConnections()
 
 function printResult(item, index) {
 	jsPlumb.ready(function() {
-	jsPlumb.setContainer($('#container'));
-	var tr = $('<tr>');
-	var connect = $('<td>').addClass('connect').text(item).attr('data-content','this is the content').addClass('');
-	var target = $('<td>').addClass('connect').addClass('');
-	var img = document.createElement("IMG");
-    img.src = "Images/hashtag.png";
-    $(target).html(img);
-	target.css("width","50px");
-	img.style.width = '17.5px';
-	tr.append(target);
-	tr.append(connect);
-	div.append(tr);
-	$(connect).popover({ trigger: "hover" });
-	
-	target.attr('id', "target_" + panelTitle[0] + "_" + item);
-	connect.attr('id', "source_" + panelTitle[0] + "_" + item);
-	
-	jsPlumb.makeTarget(target, {
-	  parent: newState,
-	  anchor: 'Continuous',
-	  MaxConnections : 1,
-	  parameters:{
-        "titleTarget":panelTitle[0],
-        "itemTarget":item
-		}
-	});
-	
-	jsPlumb.makeSource(connect, {
-	  parent: newState,
-	  isSource:true,
-	  MaxConnections : 1,
-	  anchor: 'Continuous',
-	  parameters:{
-        "titleSource":panelTitle[0],
-        "itemSource":item
-		}
-	});		
-	
-	
-	
-	//jsPlumb.select(target).setLabel("target_" + panelTitle[0] + "_" + item);
-	//jsPlumb.select(connect).setLabel("source_" + panelTitle[0] + "_" + item);
-	//jsPlumb.setId(target, panelTitle[0] + "_" + item);
-	//jsPlumb.setId(connect, panelTitle[0] + "_" + item);
-	//console.log("source_" + panelTitle[0] + "_" + item);
-	i++;     
+		jsPlumb.setContainer($('#container'));
+		var tr = $('<tr>');
+		var connect = $('<td>').addClass('connect').text(item).attr('data-content','this is the content');
+		var target = $('<td>').addClass('connect').addClass('');
+		var img = document.createElement("IMG");
+		img.src = "Images/hashtag.png";
+		$(target).html(img);
+		target.css("width","50px");
+		img.style.width = '17.5px';
+		tr.append(target);
+		tr.append(connect);
+		div.append(tr);
+		$(connect).popover({ trigger: "hover" });
+		
+		target.attr('id', "target_" + panelTitle[0] + "_" + item);
+		connect.attr('id', "source_" + panelTitle[0] + "_" + item);
+		
+		jsPlumb.makeTarget(target, {
+		  parent: newState,
+		  anchor: 'Continuous',
+		  MaxConnections : 1,
+		  parameters:{
+			"titleTarget":panelTitle[0],
+			"itemTarget":item
+			}
+		});
+		
+		jsPlumb.makeSource(connect, {
+		  parent: newState,
+		  isSource:true,
+		  MaxConnections : 1,
+		  anchor: 'Continuous',
+		  parameters:{
+			"titleSource":panelTitle[0],
+			"itemSource":item
+			}
+		});		
+		
+		
+		
+		//jsPlumb.select(target).setLabel("target_" + panelTitle[0] + "_" + item);
+		//jsPlumb.select(connect).setLabel("source_" + panelTitle[0] + "_" + item);
+		//jsPlumb.setId(target, panelTitle[0] + "_" + item);
+		//jsPlumb.setId(connect, panelTitle[0] + "_" + item);
+		//console.log("source_" + panelTitle[0] + "_" + item);
+		i++;     
 	});
 
 }
+
 //When Connection was made , take each other parameters and process it
  
     
@@ -342,6 +353,44 @@ function createPanel(canvasArea) {
 	$(".footerPanel").removeClass('hide');
 	return panelName;
 }
+
+function createSideBarPanel(){
+	var panelName = "state"+panelCount;
+	var li = $(document.createElement('li')).attr('id',panelName).addClass('navstack');
+
+	var td1 = $(document.createElement('span')).text(panelTitle[0]).css('cursor','move');
+	var td2 = $(document.createElement('span')).text('#').css('float','right').css('cursor','pointer');
+	
+	
+	li.css('border-top-style','solid');
+	li.css('border-bottom-style','solid');
+	li.css('background','white');
+	
+
+	li.append(td1);
+	li.append(td2);
+	$('.sideBarSortable').append(li);
+	
+	jsPlumb.draggable(li);
+	jsPlumb.makeSource(td2, {
+		  parent: li,
+		  isSource:true,
+		  MaxConnections : 1,
+		  anchor: 'Continuous'
+		});	
+		
+	return panelName;
+}
+
+jQuery.fn.center = function () {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
 
 
 

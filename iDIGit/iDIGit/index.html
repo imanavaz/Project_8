@@ -47,6 +47,11 @@
 			</div>
 		</div>
 	</nav>
+	<div class="col-sm-2 sidenav" role="group" style="position:absolute;transition: 100ms left;">
+		<ul id="sideBarSortable" class="sideBarSortable nav nav-stacked nav-pills">
+
+		</ul>
+	</div>
 	<div class="col-sm-2 sidenav hidden" role="group" style="position:fixed;transition: 100ms left;" ng-class="{hidden: sideNav}" ng-mouseenter="sideNav = false" ng-mouseleave="sideNav = true">
 		<ul class="nav nav-stacked nav-pills">
 			<li class="navstack">
@@ -89,17 +94,8 @@
 			</li>
 		</ul>
 	</div>
-	<div id="container">
-
-	<div class="container-fluid text-left" id="canvas-warp">    
-		<!--Canvas-->
-		<canvas id="myCanvas" >
-			
-		</canvas>
-		<div id="canvas-area" >
-			
-		</div>
-	</div>
+	<div class="" id="container" >
+		<div class="circleBase type3">Data Integration</div>
 	</div>
 	<script>
         document.getElementById('import_file').addEventListener('change', readSingleFile, false);

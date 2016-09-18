@@ -72,3 +72,18 @@ tbody {
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
+
+.circleBase {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+}
+
+.type3 {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border: 15px solid blue;
+	text-align: center;
+	line-height: 150px;
+}
+
