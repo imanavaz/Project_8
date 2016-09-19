@@ -17,20 +17,31 @@ var connUndo = [];
 var sourceRedo = [];
 var targetRedo = [];
 var URCount=0; //Undo Redo Count
+var object = [];
+var resultlevel0 = [];
+var level0Object;
+var state = 0;
 
-
+//When document ready toogle
 $( document ).ready(function() {
-    $('[data-toggle="popover"]').popover();
-    $( "#sideBarSortable" ).sortable();
-    $( "#sideBarSortable" ).disableSelection();
-	$('.circleBase').center();
+    $('[data-toggle="popover"]').popover(); //Enable popover
+	$('.circleBase').center(); //center the circle
 	jsPlumb.makeTarget($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
+	}); //make target circle
+	$("#checkAll").change(function () {
+    $("input:checkbox").prop('checked', $(this).prop("checked"));
+	}); //checkALl Function
+	$(".circleBase").on("click", function(){ 
+		if (confirm('Are you sure want to continue to Level 1?')) {
+			level1Start();
+		} else {
+			// Do nothing!
+		}
 	});
+	
 });
-
-
 
 
 
@@ -68,30 +79,16 @@ function processCSV(f)
         header: true,
         //worker: true,
         comments: "#",
-        //step: function (row) {//testing features
-        //    console.log("Row:", row.data);
-        //},
-        //step: function(results) {
-        //    console.log("Row:", results.data);
-        //},
+
 		
         complete: function (results) {//Process csv results
-            //console.log(results.meta.fields);
+
 			//== Change the result data to string
 			var resultData = results.meta.fields.toString();
 			
 			//== Split to take the data each
 			var resultArray = resultData.split(",");
-						
-			//== Create Panel in the canvas 
-			canvasArea = document.getElementById("container");
-			//resultDivName = createPanel(canvasArea);
-			resultDivName = createSideBarPanel(canvasArea);
-			//== Take drawing area name to be inserted with content
-			//resultDiv = document.getElementById(resultDivName);
-			
-			//== Foreach of the data
-			//resultArray.forEach(printResult);
+			createSideBarItem(resultArray);
 			
 			panelCount+=1;
         }
@@ -153,6 +150,7 @@ function processJSON(f)
 	
 }
 
+//Detaching All Connection
 function detachAllConnections()
 {
 	if (confirm('Are you sure want to detach all connections?')) {
@@ -162,6 +160,45 @@ function detachAllConnections()
 		// Do nothing!
 	}
 	
+}
+
+//Saving Level 0 Result
+function saveLevel0Result(){
+	var checked = $("input:checkbox:checked.level0Item").map(function(){
+      return $(this).val();
+    }).get(); // <----
+	
+	var name  = level0Object['name'];
+	var title  = level0Object['title'];
+	var position = $("."+name).offset();
+	
+	var result = {
+		'name' : name,
+		'title' : title,
+		'items' : checked,
+		'top' : position.top,
+		'left' : position.left
+	};
+	resultlevel0.push(result);
+	//console.log(resultlevel0);
+}
+
+function level1Start(){
+	jsPlumb.detachEveryConnection();
+	
+	$(".circleBase").remove();
+	
+	for(var i=0;i<resultlevel0.length;i++){
+		var result = resultlevel0[i];
+		$("."+result['name']).remove();
+		createPanel(result);
+		result['items'].forEach(printResult);
+		//for(var j=0;i<resultlevel0[i]['items'].length;j++){
+		//	printItemLevel1(resultlevel0[i]['items'][j],resultlevel0[i]['title']);
+		//}
+	}
+	
+	state=1;
 }
 
 function printResult(item, index) {
@@ -216,32 +253,114 @@ function printResult(item, index) {
 
 }
 
+function createPanel(item) {
+	newState = $('<table>').attr('id', 'state' + panelCount).addClass('item').addClass('table').addClass('table-responsive').addClass('table-condensed').addClass('table-hover');
+	var thead = $('<thead>');
+	var title = $('<th>').attr('colspan','2').addClass('heading').text(item['title']);
+	var body = $('<tbody>').addClass('').addClass('').attr('id', 'also' + item['name']).addClass('');
+	div = body;
+	title.append(" <button type='button' class='close clickClose' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
+	title.append(" <button type='button' class='showSize-"+item['name']+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i>i</i></span></button>");
+	title.append(" <button type='button' class='info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
+	thead.append(title);
+	newState.append(thead);
+	newState.append(body);
+	$('body').append(newState);
+	//body.css("height","150px");
+	//body.css("overflow","auto");
+	newState.css("width","250px");
+	newState.css("height","250px");
+	newState.css("overflow-y","scroll");
+	//newState.css("z-index:-1;");
+
+	newState.resizable();
+	newState.draggable({
+      drag: function() {
+        jsPlumb.repaintEverything();
+      }
+    });
+	
+	$( newState ).resize(function() {
+	   jsPlumb.repaintEverything();
+	});
+	
+	$( body ).scroll(function() {
+	  jsPlumb.repaintEverything();
+	  //alert('scroll');
+	});
+	
+	$(".clickClose").on("click", function(){ 
+	   $(this).closest(".table").remove();
+	   panelexist -=1;
+	   if(panelexist <1){
+		   $(".footerPanel").addClass('hide');
+	   }
+		//jsPlumb.repaintEverything();
+	});
+	$(".showSize-"+panelCount).on("click", function(){ 
+		alert(
+		"Height = " +
+		$(this).closest(".table").height() + "px " +
+		"Width = " +
+		$(this).closest(".table").width() + "px " +
+		"Location = x:" +
+		$(this).closest(".table").offset().left + " ,y:" + $(this).closest(".table").offset().top
+		
+		);
+	});
+	
+	newState.offset({ top: item['top'], left: item['left'] });
+	panelexist +=1;
+	$(".footerPanel").removeClass('hide');
+
+}
+
 //When Connection was made , take each other parameters and process it
- 
-    
 jsPlumb.bind('connection',function(info,ev){
-    var con=info.connection;   //this is the new connection
-	var titleSource  = con.getParameter("titleSource");
-	var titleTarget  = con.getParameter("titleTarget");
-	var itemsource  = con.getParameter("itemSource");
-	var itemtarget  = con.getParameter("itemTarget");
-	connUndo[URCount] = con.sourceId;
-	sourceRedo[URCount] = con.sourceId;
-	targetRedo[URCount] = con.targetId;
-	
-	
-	if(dataJSON==""){
-		dataJSON += '{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
-	}else
-	{
-		dataJSON += ',{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
+	if(state==0){
+		var con=info.connection;   //this is the new connection
+		var items  = con.getParameter("items");
+		var name  = con.getParameter("name");
+		var title  = con.getParameter("title");
+		var holder = $(".chooseItem-holder");
+		
+		
+		level0Object = {
+			'name' : name,
+			'title' : title,
+		};
+		//console.log(level0Object);
+		$('#checkAll').attr('checked', false)
+		holder.empty();
+		items.forEach(printResultLevel0);
+		$("#chooseItemModal").modal('show');
 	}
-	$('.undoButton').removeAttr('disabled');
-	URCount +=1;
-	//objConJSON = JSON.parse(dataJSON);
-	//console.log(jsPlumb.select("source_Population_AreaCode").getParameter("titleSource"));
-	console.log(connUndo);
+	if(state==1){
+		
+	}
 });
+
+function printResultLevel0(item, index) {
+	
+	var holder = $(".chooseItem-holder");
+	var tr = $(document.createElement('tr'));
+	var checkboxTD = $(document.createElement('td'));
+	var checkbox = $(document.createElement('input'));
+	var itemTD = $(document.createElement('td'));
+	
+	checkbox.addClass('level0Item');
+	checkbox.attr('type','checkbox');
+	checkbox.attr('value',item);
+	itemTD.text(item);
+	
+	checkboxTD.append(checkbox);
+	tr.append(checkboxTD);
+	tr.append(itemTD);
+	holder.append(tr);
+	
+	
+	//console.log(item);
+}
 
 // When Download JSON v2
 function downloadJSON(){
@@ -292,96 +411,54 @@ function redoConnections(){
 	});
 	//$('.redoButton').attr('disabled','disabled');
 }
+
+// Create Side Bar Item
+function createSideBarItem(items){
+	
+	var name = panelTitle[0]+"-"+panelCount;
+	var div = $(document.createElement('div'));
+	var i = $(document.createElement('i'));
+	 
+	div.text(panelTitle[0]);
+	
+	i.addClass('level0-handle');
+	i.attr('id','i' + name);
+	i.addClass('glyphicon');
+	i.addClass('glyphicon-triangle-right');
+	
+	div.addClass('nameContainer');
+	div.attr('id',name);
+	div.addClass(name);
+	div.css('border-top','1px solid');
+	div.css('border-bottom','1px solid');
+	div.css('z-index','999');
+	div.css('cursor','pointer');
+	
+	div.append(i);
+	
+	$('.sidebar-holder').append(div);
+	
+	div.draggable({
+      drag: function() {
+        jsPlumb.repaintEverything();
+      }
+    });
+	
+	jsPlumb.makeSource(i, {
+		parent: div,
+		isSource:true,
+		anchor: 'Continuous',
+		parameters : {
+			'name' : name,
+			'title' : panelTitle[0],
+			'items' : items
+		}
+	});
 	
 
-
-function createPanel(canvasArea) {
-	var panelName = "state"+panelCount;
-	newState = $('<table>').attr('id', 'state' + panelCount).addClass('item').addClass('table').addClass('table-responsive').addClass('table-condensed').addClass('table-hover');
-	var thead = $('<thead>');
-	var title = $('<th>').attr('colspan','2').addClass('heading').text(panelTitle[0]);
-	var body = $('<tbody>').addClass('').addClass('').attr('id', 'also' + panelCount).addClass('');
-	div = body;
-	title.append(" <button type='button' class='close clickClose' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>");
-	title.append(" <button type='button' class='showSize-"+panelCount+" info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i>i</i></span></button>");
-	title.append(" <button type='button' class='info' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>?</span></button>");
-	thead.append(title);
-	newState.append(thead);
-	newState.append(body);
-	$('#container').append(newState);
-	//body.css("height","150px");
-	//body.css("overflow","auto");
-	newState.css("width","250px");
-	newState.css("height","250px");
-	newState.css("overflow-y","scroll");
-	//newState.css("z-index:-1;");
-	jsPlumb.draggable(newState,{
-		filter:".ui-resizable-handle"
-	});
-	newState.resizable();
-	
-	$( newState ).resize(function() {
-	   jsPlumb.repaintEverything();
-	});
-	
-	$( body ).scroll(function() {
-	  jsPlumb.repaintEverything();
-	  //alert('scroll');
-	});
-	$(".clickClose").on("click", function(){ 
-	   $(this).closest(".table").remove();
-	   panelexist -=1;
-	   if(panelexist <1){
-		   $(".footerPanel").addClass('hide');
-	   }
-		//jsPlumb.repaintEverything();
-	});
-	$(".showSize-"+panelCount).on("click", function(){ 
-		alert(
-		"Height = " +
-		$(this).closest(".table").height() + "px " +
-		"Width = " +
-		$(this).closest(".table").width() + "px " +
-		"Location = x:" +
-		$(this).closest(".table").offset().left + " ,y:" + $(this).closest(".table").offset().top
-		
-		);
-	});
-	
-	
-	panelexist +=1;
-	$(".footerPanel").removeClass('hide');
-	return panelName;
 }
 
-function createSideBarPanel(){
-	var panelName = "state"+panelCount;
-	var li = $(document.createElement('li')).attr('id',panelName).addClass('navstack');
-
-	var td1 = $(document.createElement('span')).text(panelTitle[0]).css('cursor','move');
-	var td2 = $(document.createElement('span')).text('#').css('float','right').css('cursor','pointer');
-	
-	
-	li.css('border-top-style','solid');
-	li.css('border-bottom-style','solid');
-	li.css('background','white');
-	
-
-	li.append(td1);
-	li.append(td2);
-	$('.sideBarSortable').append(li);
-	
-	jsPlumb.draggable(li);
-	jsPlumb.makeSource(td2, {
-		  parent: li,
-		  isSource:true,
-		  MaxConnections : 1,
-		  anchor: 'Continuous'
-		});	
-		
-	return panelName;
-}
-
+//Jquery Custom Function make Item to Center
 jQuery.fn.center = function () {
     this.css("position","absolute");
     this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
@@ -390,10 +467,3 @@ jQuery.fn.center = function () {
                                                 $(window).scrollLeft()) + "px");
     return this;
 }
-
-
-
-
-
-
-
