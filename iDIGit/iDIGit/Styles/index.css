@@ -1,4 +1,4 @@
-/* Remove the navbar's default margin-bottom and rounded borders */ 
+/* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
   margin-bottom: 0;
   border-radius: 0;
@@ -30,4 +30,24 @@
     border: 15px solid blue;
 	text-align: center;
 	line-height: 150px;
+}
+
+#popUpInput{
+   z-index: 100;
+   position: absolute;
+   background-color: rgba(123, 123,123, 0.9);
+   display: none;
+   width: 300px;
+   height: 200px;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   margin: -100px 0 0 -150px;
+
+}
+#popUpInput > a {
+    width: 90px;
+    height: 90px;
+    float: left;
+    margin: 15px;
 }

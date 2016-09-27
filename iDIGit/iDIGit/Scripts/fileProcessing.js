@@ -1,4 +1,4 @@
-﻿//== Declare Variable 
+﻿//== Declare Variable
 var contents;
 var w = 500;
 var h = 400;
@@ -22,7 +22,7 @@ var resultlevel0 = [];
 var level0Object;
 var state = 0;
 
-//When document ready toogle
+//When document ready toggle
 $( document ).ready(function() {
     $('[data-toggle="popover"]').popover(); //Enable popover
 	$('.circleBase').center(); //center the circle
@@ -33,19 +33,28 @@ $( document ).ready(function() {
 	$("#checkAll").change(function () {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
 	}); //checkALl Function
-	$(".circleBase").on("click", function(){ 
+	$(".circleBase").on("click", function(){
 		if (confirm('Are you sure want to continue to Level 1?')) {
 			level1Start();
 		} else {
 			// Do nothing!
 		}
 	});
-	
+
 });
 
+function importDataClick() {
+    $("#popUpInput").show();
+ };
 
+function textOrCSVClicked(e) {
+    //$("#baseDiv").html($("#popupSelect").val() + ' clicked. Click again to change.');
+    $("#popUpInput").hide();
+    document.getElementById('import_file').click();//$("#import_file").trigger('click');
 
-function readSingleFile(eve) { //executes when a file is read by "import data" 
+ }
+
+function readSingleFile(eve) { //executes when a file is read by "import data"
 
     var file = eve.target.files[0];
 
@@ -58,7 +67,7 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
     panelTitle = parts;
 
     var fileExt = parts[parts.length - 1];
-        
+
     switch (fileExt.toLowerCase()) {
         case ('csv'):
             processCSV(file);
@@ -80,16 +89,16 @@ function processCSV(f)
         //worker: true,
         comments: "#",
 
-		
+
         complete: function (results) {//Process csv results
 
 			//== Change the result data to string
 			var resultData = results.meta.fields.toString();
-			
+
 			//== Split to take the data each
 			var resultArray = resultData.split(",");
 			createSideBarItem(resultArray);
-			
+
 			panelCount+=1;
         }
     });
@@ -99,12 +108,12 @@ function processCSV(f)
 function processTXT(f)
 {
     var reader = new FileReader();
-	
+
     reader.onload = function (e) {
         contents = e.target.result;
         console.log(contents);
     };
-	
+
     reader.readAsText(f);
 }
 
@@ -119,13 +128,13 @@ function processJSON(f)
             //console.log(vJSONImport);
 			vJSONImport = vJSONImport["connections"];
 			//console.log(vJSONImport);
-			
+
 			for(var i=0;i<vJSONImport.length;i++){
 				var data = vJSONImport[i];
 				var y=0;
 				var sourceDiv;
 				var targetDiv;
-				
+
 				for (var k in data) {
 					if (data.hasOwnProperty(k)) {
 						if(y==0){
@@ -133,21 +142,21 @@ function processJSON(f)
 						}else if(y==1){
 							targetDiv = "target_" + k + "_" + data[k];
 						}
-					   
+
 					}
 					y+=1;
 				}
 				jsPlumb.connect({
-				  source: sourceDiv, 
+				  source: sourceDiv,
 				  target: targetDiv
 				});
-				
+
 			}
-			
+
 		}
      });
-    
-	
+
+
 }
 
 //Detaching All Connection
@@ -159,7 +168,7 @@ function detachAllConnections()
 	} else {
 		// Do nothing!
 	}
-	
+
 }
 
 //Saving Level 0 Result
@@ -167,11 +176,11 @@ function saveLevel0Result(){
 	var checked = $("input:checkbox:checked.level0Item").map(function(){
       return $(this).val();
     }).get(); // <----
-	
+
 	var name  = level0Object['name'];
 	var title  = level0Object['title'];
 	var position = $("."+name).offset();
-	
+
 	var result = {
 		'name' : name,
 		'title' : title,
@@ -185,9 +194,9 @@ function saveLevel0Result(){
 
 function level1Start(){
 	jsPlumb.detachEveryConnection();
-	
+
 	$(".circleBase").remove();
-	
+
 	for(var i=0;i<resultlevel0.length;i++){
 		var result = resultlevel0[i];
 		$("."+result['name']).remove();
@@ -197,7 +206,7 @@ function level1Start(){
 		//	printItemLevel1(resultlevel0[i]['items'][j],resultlevel0[i]['title']);
 		//}
 	}
-	
+
 	state=1;
 }
 
@@ -216,10 +225,10 @@ function printResult(item, index) {
 		tr.append(connect);
 		div.append(tr);
 		$(connect).popover({ trigger: "hover" });
-		
+
 		target.attr('id', "target_" + panelTitle[0] + "_" + item);
 		connect.attr('id', "source_" + panelTitle[0] + "_" + item);
-		
+
 		jsPlumb.makeTarget(target, {
 		  parent: newState,
 		  anchor: 'Continuous',
@@ -229,7 +238,7 @@ function printResult(item, index) {
 			"itemTarget":item
 			}
 		});
-		
+
 		jsPlumb.makeSource(connect, {
 		  parent: newState,
 		  isSource:true,
@@ -239,16 +248,16 @@ function printResult(item, index) {
 			"titleSource":panelTitle[0],
 			"itemSource":item
 			}
-		});		
-		
-		
-		
+		});
+
+
+
 		//jsPlumb.select(target).setLabel("target_" + panelTitle[0] + "_" + item);
 		//jsPlumb.select(connect).setLabel("source_" + panelTitle[0] + "_" + item);
 		//jsPlumb.setId(target, panelTitle[0] + "_" + item);
 		//jsPlumb.setId(connect, panelTitle[0] + "_" + item);
 		//console.log("source_" + panelTitle[0] + "_" + item);
-		i++;     
+		i++;
 	});
 
 }
@@ -279,17 +288,17 @@ function createPanel(item) {
         jsPlumb.repaintEverything();
       }
     });
-	
+
 	$( newState ).resize(function() {
 	   jsPlumb.repaintEverything();
 	});
-	
+
 	$( body ).scroll(function() {
 	  jsPlumb.repaintEverything();
 	  //alert('scroll');
 	});
-	
-	$(".clickClose").on("click", function(){ 
+
+	$(".clickClose").on("click", function(){
 	   $(this).closest(".table").remove();
 	   panelexist -=1;
 	   if(panelexist <1){
@@ -297,7 +306,7 @@ function createPanel(item) {
 	   }
 		//jsPlumb.repaintEverything();
 	});
-	$(".showSize-"+panelCount).on("click", function(){ 
+	$(".showSize-"+panelCount).on("click", function(){
 		alert(
 		"Height = " +
 		$(this).closest(".table").height() + "px " +
@@ -305,10 +314,10 @@ function createPanel(item) {
 		$(this).closest(".table").width() + "px " +
 		"Location = x:" +
 		$(this).closest(".table").offset().left + " ,y:" + $(this).closest(".table").offset().top
-		
+
 		);
 	});
-	
+
 	newState.offset({ top: item['top'], left: item['left'] });
 	panelexist +=1;
 	$(".footerPanel").removeClass('hide');
@@ -323,8 +332,8 @@ jsPlumb.bind('connection',function(info,ev){
 		var name  = con.getParameter("name");
 		var title  = con.getParameter("title");
 		var holder = $(".chooseItem-holder");
-		
-		
+
+
 		level0Object = {
 			'name' : name,
 			'title' : title,
@@ -336,29 +345,29 @@ jsPlumb.bind('connection',function(info,ev){
 		$("#chooseItemModal").modal('show');
 	}
 	if(state==1){
-		
+
 	}
 });
 
 function printResultLevel0(item, index) {
-	
+
 	var holder = $(".chooseItem-holder");
 	var tr = $(document.createElement('tr'));
 	var checkboxTD = $(document.createElement('td'));
 	var checkbox = $(document.createElement('input'));
 	var itemTD = $(document.createElement('td'));
-	
+
 	checkbox.addClass('level0Item');
 	checkbox.attr('type','checkbox');
 	checkbox.attr('value',item);
 	itemTD.text(item);
-	
+
 	checkboxTD.append(checkbox);
 	tr.append(checkboxTD);
 	tr.append(itemTD);
 	holder.append(tr);
-	
-	
+
+
 	//console.log(item);
 }
 
@@ -385,28 +394,28 @@ function downloadJSON(){
 	element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON2));
 	element.setAttribute('download', "fileName.json");
 	element.click();
-	
+
 }
 
 function undoConnections(){
 	jsPlumb.detachAllConnections(connUndo[URCount-1]);
 	connUndo[URCount] = "";
 	$('.redoButton').removeAttr('disabled');
-	
+
 	if(URCount<=1){
 		$('.undoButton').attr('disabled','disabled');
 		URCount -=1;
 	}else{
 		URCount -=1;
 	}
-	
+
 }
 
 function redoConnections(){
 	//console.log(sourceRedo);
 	//console.log(targetRedo);
 	jsPlumb.connect({
-	  source: sourceRedo[URCount], 
+	  source: sourceRedo[URCount],
 	  target: targetRedo[URCount]
 	});
 	//$('.redoButton').attr('disabled','disabled');
@@ -414,18 +423,18 @@ function redoConnections(){
 
 // Create Side Bar Item
 function createSideBarItem(items){
-	
+
 	var name = panelTitle[0]+"-"+panelCount;
 	var div = $(document.createElement('div'));
 	var i = $(document.createElement('i'));
-	 
+
 	div.text(panelTitle[0]);
-	
+
 	i.addClass('level0-handle');
 	i.attr('id','i' + name);
 	i.addClass('glyphicon');
 	i.addClass('glyphicon-triangle-right');
-	
+
 	div.addClass('nameContainer');
 	div.attr('id',name);
 	div.addClass(name);
@@ -433,17 +442,17 @@ function createSideBarItem(items){
 	div.css('border-bottom','1px solid');
 	div.css('z-index','999');
 	div.css('cursor','pointer');
-	
+
 	div.append(i);
-	
+
 	$('.sidebar-holder').append(div);
-	
+
 	div.draggable({
       drag: function() {
         jsPlumb.repaintEverything();
       }
     });
-	
+
 	jsPlumb.makeSource(i, {
 		parent: div,
 		isSource:true,
@@ -454,16 +463,16 @@ function createSideBarItem(items){
 			'items' : items
 		}
 	});
-	
+
 
 }
 
 //Jquery Custom Function make Item to Center
 jQuery.fn.center = function () {
     this.css("position","absolute");
-    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
                                                 $(window).scrollTop()) + "px");
-    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
                                                 $(window).scrollLeft()) + "px");
     return this;
 }
