@@ -32,17 +32,26 @@
 	line-height: 150px;
 }
 
+.type4 {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border: 5px solid black;
+	text-align: center;
+	line-height: 150px;
+}
+
 #popUpInput{
    z-index: 100;
    position: absolute;
    background-color: rgba(123, 123,123, 0.9);
    display: none;
-   width: 300px;
-   height: 200px;
+   width: 400px;
+   height: 400px;
    position: absolute;
    top: 50%;
    left: 50%;
-   margin: -100px 0 0 -150px;
+   margin: -200px 0 0 -200px;
 
 }
 #popUpInput > a {

@@ -1,4 +1,4 @@
-//== Declare Variable 
+//== Declare Variable
 var contents;
 var w = 500;
 var h = 400;
@@ -34,7 +34,7 @@ $( document ).ready(function() {
 
 
 
-function readSingleFile(eve) { //executes when a file is read by "import data" 
+function readSingleFile(eve) { //executes when a file is read by "import data"
 
     var file = eve.target.files[0];
 
@@ -47,7 +47,7 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
     panelTitle = parts;
 
     var fileExt = parts[parts.length - 1];
-        
+
     switch (fileExt.toLowerCase()) {
         case ('csv'):
             processCSV(file);
@@ -74,25 +74,25 @@ function processCSV(f)
         //step: function(results) {
         //    console.log("Row:", results.data);
         //},
-		
+
         complete: function (results) {//Process csv results
             //console.log(results.meta.fields);
 			//== Change the result data to string
 			var resultData = results.meta.fields.toString();
-			
+
 			//== Split to take the data each
 			var resultArray = resultData.split(",");
-						
-			//== Create Panel in the canvas 
+
+			//== Create Panel in the canvas
 			canvasArea = document.getElementById("container");
 			//resultDivName = createPanel(canvasArea);
 			resultDivName = createSideBarPanel(canvasArea);
 			//== Take drawing area name to be inserted with content
 			//resultDiv = document.getElementById(resultDivName);
-			
+
 			//== Foreach of the data
 			//resultArray.forEach(printResult);
-			
+
 			panelCount+=1;
         }
     });
@@ -102,12 +102,12 @@ function processCSV(f)
 function processTXT(f)
 {
     var reader = new FileReader();
-	
+
     reader.onload = function (e) {
         contents = e.target.result;
         console.log(contents);
     };
-	
+
     reader.readAsText(f);
 }
 
@@ -122,13 +122,13 @@ function processJSON(f)
             //console.log(vJSONImport);
 			vJSONImport = vJSONImport["connections"];
 			//console.log(vJSONImport);
-			
+
 			for(var i=0;i<vJSONImport.length;i++){
 				var data = vJSONImport[i];
 				var y=0;
 				var sourceDiv;
 				var targetDiv;
-				
+
 				for (var k in data) {
 					if (data.hasOwnProperty(k)) {
 						if(y==0){
@@ -136,21 +136,21 @@ function processJSON(f)
 						}else if(y==1){
 							targetDiv = "target_" + k + "_" + data[k];
 						}
-					   
+
 					}
 					y+=1;
 				}
 				jsPlumb.connect({
-				  source: sourceDiv, 
+				  source: sourceDiv,
 				  target: targetDiv
 				});
-				
+
 			}
-			
+
 		}
      });
-    
-	
+
+
 }
 
 function detachAllConnections()
@@ -161,7 +161,7 @@ function detachAllConnections()
 	} else {
 		// Do nothing!
 	}
-	
+
 }
 
 function printResult(item, index) {
@@ -179,10 +179,10 @@ function printResult(item, index) {
 		tr.append(connect);
 		div.append(tr);
 		$(connect).popover({ trigger: "hover" });
-		
+
 		target.attr('id', "target_" + panelTitle[0] + "_" + item);
 		connect.attr('id', "source_" + panelTitle[0] + "_" + item);
-		
+
 		jsPlumb.makeTarget(target, {
 		  parent: newState,
 		  anchor: 'Continuous',
@@ -192,7 +192,7 @@ function printResult(item, index) {
 			"itemTarget":item
 			}
 		});
-		
+
 		jsPlumb.makeSource(connect, {
 		  parent: newState,
 		  isSource:true,
@@ -202,23 +202,23 @@ function printResult(item, index) {
 			"titleSource":panelTitle[0],
 			"itemSource":item
 			}
-		});		
-		
-		
-		
+		});
+
+
+
 		//jsPlumb.select(target).setLabel("target_" + panelTitle[0] + "_" + item);
 		//jsPlumb.select(connect).setLabel("source_" + panelTitle[0] + "_" + item);
 		//jsPlumb.setId(target, panelTitle[0] + "_" + item);
 		//jsPlumb.setId(connect, panelTitle[0] + "_" + item);
 		//console.log("source_" + panelTitle[0] + "_" + item);
-		i++;     
+		i++;
 	});
 
 }
 
 //When Connection was made , take each other parameters and process it
- 
-    
+
+
 jsPlumb.bind('connection',function(info,ev){
     var con=info.connection;   //this is the new connection
 	var titleSource  = con.getParameter("titleSource");
@@ -228,8 +228,8 @@ jsPlumb.bind('connection',function(info,ev){
 	connUndo[URCount] = con.sourceId;
 	sourceRedo[URCount] = con.sourceId;
 	targetRedo[URCount] = con.targetId;
-	
-	
+
+
 	if(dataJSON==""){
 		dataJSON += '{ "'+ titleSource +'":"'+itemsource+'" , "'+ titleTarget +'":"'+ itemtarget +'" } ';
 	}else
@@ -266,33 +266,33 @@ function downloadJSON(){
 	element.setAttribute('href', 'data:text/text;charset=utf-8,' +      encodeURI(dataJSON2));
 	element.setAttribute('download', "fileName.json");
 	element.click();
-	
+
 }
 
 function undoConnections(){
 	jsPlumb.detachAllConnections(connUndo[URCount-1]);
 	connUndo[URCount] = "";
 	$('.redoButton').removeAttr('disabled');
-	
+
 	if(URCount<=1){
 		$('.undoButton').attr('disabled','disabled');
 		URCount -=1;
 	}else{
 		URCount -=1;
 	}
-	
+
 }
 
 function redoConnections(){
 	//console.log(sourceRedo);
 	//console.log(targetRedo);
 	jsPlumb.connect({
-	  source: sourceRedo[URCount], 
+	  source: sourceRedo[URCount],
 	  target: targetRedo[URCount]
 	});
 	//$('.redoButton').attr('disabled','disabled');
 }
-	
+
 
 
 function createPanel(canvasArea) {
@@ -319,16 +319,16 @@ function createPanel(canvasArea) {
 		filter:".ui-resizable-handle"
 	});
 	newState.resizable();
-	
+
 	$( newState ).resize(function() {
 	   jsPlumb.repaintEverything();
 	});
-	
+
 	$( body ).scroll(function() {
 	  jsPlumb.repaintEverything();
 	  //alert('scroll');
 	});
-	$(".clickClose").on("click", function(){ 
+	$(".clickClose").on("click", function(){
 	   $(this).closest(".table").remove();
 	   panelexist -=1;
 	   if(panelexist <1){
@@ -336,7 +336,7 @@ function createPanel(canvasArea) {
 	   }
 		//jsPlumb.repaintEverything();
 	});
-	$(".showSize-"+panelCount).on("click", function(){ 
+	$(".showSize-"+panelCount).on("click", function(){
 		alert(
 		"Height = " +
 		$(this).closest(".table").height() + "px " +
@@ -344,11 +344,11 @@ function createPanel(canvasArea) {
 		$(this).closest(".table").width() + "px " +
 		"Location = x:" +
 		$(this).closest(".table").offset().left + " ,y:" + $(this).closest(".table").offset().top
-		
+
 		);
 	});
-	
-	
+
+
 	panelexist +=1;
 	$(".footerPanel").removeClass('hide');
 	return panelName;
@@ -360,39 +360,33 @@ function createSideBarPanel(){
 
 	var td1 = $(document.createElement('span')).text(panelTitle[0]).css('cursor','move');
 	var td2 = $(document.createElement('span')).text('#').css('float','right').css('cursor','pointer');
-	
-	
+
+
 	li.css('border-top-style','solid');
 	li.css('border-bottom-style','solid');
 	li.css('background','white');
-	
+
 
 	li.append(td1);
 	li.append(td2);
 	$('.sideBarSortable').append(li);
-	
+
 	jsPlumb.draggable(li);
 	jsPlumb.makeSource(td2, {
 		  parent: li,
 		  isSource:true,
 		  MaxConnections : 1,
 		  anchor: 'Continuous'
-		});	
-		
+		});
+
 	return panelName;
 }
 
 jQuery.fn.center = function () {
     this.css("position","absolute");
-    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
                                                 $(window).scrollTop()) + "px");
-    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
                                                 $(window).scrollLeft()) + "px");
     return this;
 }
-
-
-
-
-
-
