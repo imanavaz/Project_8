@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <title>iDigit</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  
+  <!-- Script -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="Libraries/modernizr.custom.js"></script>
+  <script type="text/javascript" src="Libraries/papaparse.min.js"></script>
+  <script type="text/javascript" src="Scripts/jsPlumb-2.1.4.js"></script>
+	
+  <!--My Code-->
+  <script type="text/javascript" src="Scripts/fileProcessing.js"></script>
+  <script type="text/javascript" src="Scripts/displayLogic.js"></script>
+  
+  <script src="Scripts/index.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="Styles/index.css">
+</head>
+
+<body ng-app="" style="background:#34495e;" ng-init="sideNav = true" id="body">
+	<nav class="navbar" style="background:#FFFFFF;">
+		<div class="container-fluid"> 
+			<div class="navbar-header" >
+				<a class="navbar-brand" href="#" ng-mouseenter="sideNav = false" ng-mouseleave="sideNav = true"> <i class="glyphicon glyphicon-align-justify"></i> iDigit</a>
+			</div>
+			<div class="navbar-nav" >
+				<ul class="nav navbar-nav">
+					
+				</ul>
+			</div>
+			<div class="navbar-nav navbar-right" >
+				<ul class="nav navbar-nav">
+					<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="col-sm-2 sidenav" role="group" style="position:absolute;transition: 100ms left;">
+		<ul id="sideBarSortable" class="sideBarSortable nav nav-stacked nav-pills">
+
+		</ul>
+	</div>
+	<div class="col-sm-2 sidenav hidden" role="group" style="position:fixed;transition: 100ms left;" ng-class="{hidden: sideNav}" ng-mouseenter="sideNav = false" ng-mouseleave="sideNav = true">
+		<ul class="nav nav-stacked nav-pills">
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-search" ></i> Search</a>
+			</li>
+			<li class="navstack">
+				<a href="#" onclick="document.getElementById('import_file').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> Import Data </a>
+			</li>
+			<input class="hidden" type="file" id="import_file" accept=".csv,.txt" name="import_file"  multiple />
+			<li class="navstack">
+				<a href="#" onclick="downloadJSON()"> <i class="glyphicon glyphicon-download" ></i> Export Mapping </a>
+			</li>
+			<li class="navstack">
+				<a href="#" onclick="document.getElementById('import_mapping').click(); return false"> <i class="glyphicon glyphicon-cloud-upload" ></i> Import Mapping </a>
+			</li>
+			<input class="hidden" type="file" id="import_mapping" accept=".json" name="import_mapping"  multiple /> 
+			<li class="navstack">
+				<a href="#"><i class="fa fa-file" ></i> Vector Illustrations</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="fa fa-file" ></i> Photoshop files</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-cog" ></i> Settings</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="fa fa-question-circle-o" ></i> Help</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-inbox" ></i> Archives</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-list-alt" ></i> Articles</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-picture" ></i> Images</a>
+			</li>
+			<li class="navstack">
+				<a href="#"><i class="glyphicon glyphicon-film" ></i> Video</a>
+			</li>
+		</ul>
+	</div>
+	<div class="" id="container" >
+		<div class="circleBase type3">Data Integration</div>
+	</div>
+	<script>
+        document.getElementById('import_file').addEventListener('change', readSingleFile, false);
+        document.getElementById('import_mapping').addEventListener('change', readSingleFile, false);
+    </script>
+
+
+</body>
+	
+<div class="navbar navbar-default navbar-fixed-bottom footerPanel hide">
+    <div class="container">
+	  <button href="#" onclick="undoConnections()" class="navbar-btn btn-warning btn undoButton" disabled>
+      <span class="glyphicon glyphicon-repeat"></span>  Undo </button>
+	  <button href="#" onclick="redoConnections()" class="navbar-btn btn-primary btn redoButton" disabled>
+      <span class="glyphicon glyphicon-refresh"></span>  Redo </button> 
+      <button onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right">
+      <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </button> 
+	  <button onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right"> 
+      <span class="glyphicon glyphicon-download"></span>  Export Mapping </button>
+    </div>
+</div>
+</html>
