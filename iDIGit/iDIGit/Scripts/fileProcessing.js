@@ -26,6 +26,7 @@ var state = 0;
 $( document ).ready(function() {
     $('[data-toggle="popover"]').popover(); //Enable popover
 	$('.circleBase').center(); //center the circle
+	
 	jsPlumb.makeTarget($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
@@ -64,8 +65,7 @@ function readSingleFile(eve) { //executes when a file is read by "import data"
 
     var parts = file.name.split('.');
 	//Set panelTitle Variable as FileName
-    panelTitle = parts;
-
+    panelTitle = parts[0].replace(/\s+/g, '');
     var fileExt = parts[parts.length - 1];
 
     switch (fileExt.toLowerCase()) {

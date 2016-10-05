@@ -23,6 +23,16 @@
     behavior: url(PIE.htc); /* remove if you don't care about IE8 */
 }
 
+.roundedRectangle {
+    border-radius: 25px;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+	width: 400px;
+	padding: 25px;
+    height: 200px;
+    background: white;
+    border: 5px solid black;
+}
+
 .type3 {
     width: 200px;
     height: 200px;

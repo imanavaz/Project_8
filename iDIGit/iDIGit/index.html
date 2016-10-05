@@ -24,6 +24,7 @@
 	<!--My Code-->
 	<script type="text/javascript" src="Scripts/fileProcessing.js"></script>
 	<script type="text/javascript" src="Scripts/level0.js"></script>
+	<script type="text/javascript" src="Scripts/connectionController.js"></script>
 	<script type="text/javascript" src="Scripts/displayLogic.js"></script>
 
 	<script src="Scripts/index.js"></script>
@@ -99,6 +100,10 @@
 
 			</div>
 			<div class="circleBase type4">Data Integration</div>
+			
+			<div class="roundedRectangle hide rectText">
+
+			</div>
 
 		</div>
 	</div>
@@ -145,7 +150,19 @@
 		document.getElementById('txt_button').addEventListener('click', textOrCSVClicked, false);
 		document.getElementById('import_mapping').addEventListener('change', readSingleFile, false);
 	</script>
-
+	
+<div class="navbar navbar-default navbar-fixed-bottom footerPanel hide">
+    <div class="container">
+	  <button href="#" onclick="undoConnections()" class="navbar-btn btn-warning btn undoButton" disabled>
+      <span class="glyphicon glyphicon-repeat"></span>  Undo </button>
+	  <button href="#" onclick="redoConnections()" class="navbar-btn btn-primary btn redoButton" disabled>
+      <span class="glyphicon glyphicon-refresh"></span>  Redo </button> 
+      <button onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right">
+      <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </button> 
+	  <button onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right"> 
+      <span class="glyphicon glyphicon-download"></span>  Export Mapping </button>
+    </div>
+</div>
 </body>
 
 
