@@ -211,13 +211,16 @@ function downloadJSON(){
 
 
 // Create Side Bar Item
-function createSideBarItem(items){
-
-	var name = panelTitle+"-"+panelCount;
+function createLevel0Item(name){
+	
+	
 	var div = $(document.createElement('div'));
 	var i = $(document.createElement('i'));
-
-	div.text(panelTitle);
+	var items = dataCollection[name]['items'];
+	var title = dataCollection[name]['title'];
+	name += "-" + panelCount;
+	
+	div.text(title);
 
 	i.addClass('level0-handle');
 	i.attr('id','i' + name);
@@ -231,17 +234,18 @@ function createSideBarItem(items){
 	div.css('border-bottom','1px solid');
 	div.css('z-index','999');
 	div.css('cursor','pointer');
+	div.css('max-width','200px');
 
 	div.append(i);
 
-	$('.sidebar-holder').append(div);
+	$('.mainbar').append(div);
 
 	div.draggable({
       drag: function() {
         jsPlumb.repaintEverything();
       }
     });
-
+	
 	jsPlumb.makeSource(i, {
 		parent: div,
 		isSource:true,
@@ -252,7 +256,30 @@ function createSideBarItem(items){
 			'items' : items
 		}
 	});
+	panelCount+=1;
+}
+
+function createSideBarItem2(name){
+
+	var div = $(document.createElement('div'));
+	var i = $(document.createElement('i'));
+
+	div.text(panelTitle);
+
+	div.addClass('nameContainer');
+	div.attr('id',name);
+	div.addClass(name);
+	div.css('border-top','1px solid');
+	div.css('border-bottom','1px solid');
+	div.css('z-index','999');
+	div.css('cursor','move');
+	div.css('padding','4px');
+	div.css('margin','4px');
+	div.attr('draggable','true');
+	div.attr('ondragstart','drag(event)');
+	
+	$('.sidebar-holder').append(div);
+
 
 
 }
-

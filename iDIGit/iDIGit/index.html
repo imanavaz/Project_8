@@ -29,7 +29,23 @@
 
 	<script src="Scripts/index.js"></script>
 	<link rel="stylesheet" href="Styles/index.css">
+	<script>
+		function allowDrop(ev) {
+			ev.preventDefault();
+		}
 
+		function drag(ev) {
+			ev.dataTransfer.setData("text", ev.target.id);
+			console.log("From Drag : "+ev.target.id);
+		}
+
+		function drop(ev) {
+			ev.preventDefault();
+			var data = ev.dataTransfer.getData("text");
+			console.log("From Drop : "+data);
+			createLevel0Item(data);
+		}
+		</script>
 </head>
 
 <body ng-app="">
@@ -96,10 +112,10 @@
 			<div class="sidebar sidebar-holder col-sm-2">
 
 			</div>
-			<div class="mainbar col-sm-8">
+			<div class="mainbar col-sm-8" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 			</div>
-			<div class="circleBase type4">Data Integration</div>
+			<div class="circleBase"><p>Data Integration</p></div>
 			
 			<div class="roundedRectangle hide rectText">
 

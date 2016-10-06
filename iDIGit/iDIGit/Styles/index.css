@@ -21,6 +21,18 @@
 .circleBase {
     border-radius: 50%;
     behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+	width: 200px;
+    height: 200px;
+    background: white;
+    border: 5px solid black;
+	text-align: center;
+	line-height: 150px;
+	cursor:pointer;
+}
+
+.circleBase p{
+	margin:auto;
+	top:50%;
 }
 
 .roundedRectangle {
@@ -31,25 +43,10 @@
     height: 200px;
     background: white;
     border: 5px solid black;
+	cursor:move;
 }
 
-.type3 {
-    width: 200px;
-    height: 200px;
-    background: white;
-    border: 15px solid blue;
-	text-align: center;
-	line-height: 150px;
-}
 
-.type4 {
-    width: 200px;
-    height: 200px;
-    background: white;
-    border: 5px solid black;
-	text-align: center;
-	line-height: 150px;
-}
 
 #popUpInput{
    z-index: 100;

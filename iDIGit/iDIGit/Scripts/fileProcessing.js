@@ -21,6 +21,7 @@ var object = [];
 var resultlevel0 = [];
 var level0Object;
 var state = 0;
+var dataCollection = [];
 
 //When document ready toggle
 $( document ).ready(function() {
@@ -94,12 +95,19 @@ function processCSV(f)
 
 			//== Change the result data to string
 			var resultData = results.meta.fields.toString();
-
+			
 			//== Split to take the data each
 			var resultArray = resultData.split(",");
-			createSideBarItem(resultArray);
+			
+			dataCollection[panelTitle] = {
+				'title' : panelTitle,
+				'items' : resultArray
+			};
+			
+			//createSideBarItem(resultArray);
+			createSideBarItem2(panelTitle);
 
-			panelCount+=1;
+			
         }
     });
 
