@@ -75,18 +75,7 @@ function detachAllConnections()
 function printToRoundedRect(){
 	var con=jsPlumb.getAllConnections();
 	var data="";
-	$(".rectText").empty();
-	
-	var table = $(document.createElement('table')).addClass('table').addClass('table-condensed');
-	var thead = $(document.createElement('thead'));
-	var tbody = $(document.createElement('tbody'));
-	var th1 = $(document.createElement('th')).text("SOURCE").attr('colspan','2');
-	var th2 = $(document.createElement('th')).text("TARGET").attr('colspan','2');
-	
-	table.css("overflow","auto");
-	table.css("max-widht","250px");
-	thead.append(th1);
-	thead.append(th2);
+	$(".rectText-TBODY").empty();
 	
 	
 	for(var i=0;i<con.length;i++)
@@ -109,11 +98,9 @@ function printToRoundedRect(){
 		tr.append(sourcetd2);
 		tr.append(targettd1);
 		tr.append(targettd2);
-		tbody.append(tr);
+		$(".rectText-TBODY").append(tr);
 	}
+
 	
-	table.append(thead);
-	table.append(tbody);
-	$(".rectText").append(table);
 	
 }

@@ -27,11 +27,17 @@ var dataCollection = [];
 $( document ).ready(function() {
     $('[data-toggle="popover"]').popover(); //Enable popover
 	$('.circleBase').center(); //center the circle
+	//jsPlumb.draggable($('.circleBase')); //center the circle
 	
 	jsPlumb.makeTarget($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
 	}); //make target circle
+	//jsPlumb.makeSource($('.circleBase'), {
+	//  anchor: 'Continuous',
+	//  MaxConnections : 1
+	//}); //make target circle
+	
 	$("#checkAll").change(function () {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
 	}); //checkALl Function
@@ -105,7 +111,7 @@ function processCSV(f)
 			};
 			
 			//createSideBarItem(resultArray);
-			createSideBarItem2(panelTitle);
+			createSideBarItem(panelTitle);
 
 			
         }
@@ -177,4 +183,14 @@ jQuery.fn.center = function () {
     this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
                                                 $(window).scrollLeft()) + "px");
     return this;
+}
+
+/* Set the width of the side navigation to 250px */
+function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+    document.getElementById("sidebar").style.width = "0";
 }

@@ -34,11 +34,8 @@ function saveLevel0Result(){
 //Level 1 Start Function
 function level1Start(){
 	jsPlumb.detachEveryConnection();
-	$('.roundedRectangle').center(); //center the circle
-	$('.roundedRectangle').draggable();
-	$('.roundedRectangle').resizable();
 	$(".footerPanel").removeClass('hide');
-	$(".roundedRectangle").removeClass('hide');
+	$(".rectText").removeClass('hide');
 	$(".circleBase").remove();
 	
 	for(var i=0;i<resultlevel0.length;i++){
@@ -65,12 +62,14 @@ function createPanel(item){
 	$('.mainbar').append(table);
 	
 	
-	//body.css("height","150px");
-	//body.css("overflow","auto");
+	body.css("height","250px");
+	body.css("overflow","scroll");
 	
+	table.addClass("noselect");
 	table.css('background-color','#d3d3d3');
-	table.css("height","auto");
+	table.css("height","250px");
 	table.css("width","250px");
+	table.css("padding","5px");
 	table.css("max-height","250px");
 	table.css("overflow-y","scroll");
 	table.css("position","absolute");
@@ -211,9 +210,9 @@ function downloadJSON(){
 
 
 // Create Side Bar Item
-function createLevel0Item(name){
+function createLevel0Item(name,x,y){
 	
-	
+	console.log(name);
 	var div = $(document.createElement('div'));
 	var i = $(document.createElement('i'));
 	var items = dataCollection[name]['items'];
@@ -234,10 +233,11 @@ function createLevel0Item(name){
 	div.css('border-bottom','1px solid');
 	div.css('z-index','999');
 	div.css('cursor','pointer');
+	div.css('float','left');
 	div.css('max-width','200px');
 
 	div.append(i);
-
+	div.offset({ top: y, left: x });
 	$('.mainbar').append(div);
 
 	div.draggable({
@@ -252,29 +252,25 @@ function createLevel0Item(name){
 		anchor: 'Continuous',
 		parameters : {
 			'name' : name,
-			'title' : panelTitle,
+			'title' : title,
 			'items' : items
 		}
 	});
 	panelCount+=1;
 }
 
-function createSideBarItem2(name){
+function createSideBarItem(name){
 
-	var div = $(document.createElement('div'));
+	var div = $(document.createElement('a'));
 	var i = $(document.createElement('i'));
 
 	div.text(panelTitle);
 
-	div.addClass('nameContainer');
+	div.addClass('sidebar-item');
+	div.addClass('noselect');
 	div.attr('id',name);
 	div.addClass(name);
-	div.css('border-top','1px solid');
-	div.css('border-bottom','1px solid');
-	div.css('z-index','999');
-	div.css('cursor','move');
-	div.css('padding','4px');
-	div.css('margin','4px');
+
 	div.attr('draggable','true');
 	div.attr('ondragstart','drag(event)');
 	

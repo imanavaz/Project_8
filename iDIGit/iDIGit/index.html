@@ -36,14 +36,17 @@
 
 		function drag(ev) {
 			ev.dataTransfer.setData("text", ev.target.id);
-			console.log("From Drag : "+ev.target.id);
+			//console.log("From Drag : "+ev.target.id);
 		}
 
 		function drop(ev) {
 			ev.preventDefault();
 			var data = ev.dataTransfer.getData("text");
-			console.log("From Drop : "+data);
-			createLevel0Item(data);
+			var x = event.clientX;
+			var y = event.clientY;
+			//console.log("From Drop : "+data);
+			console.log("X : "+ x + ", Y : " +y);
+			createLevel0Item(data,x,y);
 		}
 		</script>
 </head>
@@ -106,21 +109,33 @@
 			</div>
 		</div>
 	</nav>
-
+	<div class="sidebar sidebar-holder" id="sidebar">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a class="sidebar-item">Add Item</a>
+	</div>
+	<span onclick="openNav()" class="open-sidebar noselect"> » </span>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="sidebar sidebar-holder col-sm-2">
-
-			</div>
-			<div class="mainbar col-sm-8" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-			</div>
-			<div class="circleBase"><p>Data Integration</p></div>
 			
-			<div class="roundedRectangle hide rectText">
+			<div class="mainbar col-sm-12" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 			</div>
-
+			
+			<div class="circleBase"><p>Data Integration</p></div>
+		</div>
+		<div class="row">
+			<div class="roundedRectangle rectText hide noselect" id="rectText" style="bottom:50px;border:1px black solid;right:0px;float:right;height:20vh;position:absolute;overflow:auto;">
+				<button type="button" class="close" data-dismiss="rectText">&times;</button>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<th colspan="2">SOURCE</th>
+						<th colspan="2">TARGET</th>
+					</thead>
+					<tbody class="rectText-TBODY">
+					
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 
