@@ -42,8 +42,8 @@
 		function drop(ev) {
 			ev.preventDefault();
 			var data = ev.dataTransfer.getData("text");
-			var x = event.clientX;
-			var y = event.clientY;
+			var x = ev.clientX;
+			var y = ev.clientY;
 			//console.log("From Drop : "+data);
 			console.log("X : "+ x + ", Y : " +y);
 			createLevel0Item(data,x,y);
@@ -116,11 +116,11 @@
 	<span onclick="openNav()" class="open-sidebar noselect"> » </span>
 	<div class="container-fluid">
 		<div class="row">
-			
+
 			<div class="mainbar col-sm-12" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 			</div>
-			
+
 			<div class="circleBase"><p>Data Integration</p></div>
 		</div>
 		<div class="row">
@@ -132,7 +132,7 @@
 						<th colspan="2">TARGET</th>
 					</thead>
 					<tbody class="rectText-TBODY">
-					
+
 					</tbody>
 				</table>
 			</div>
@@ -181,16 +181,16 @@
 		document.getElementById('txt_button').addEventListener('click', textOrCSVClicked, false);
 		document.getElementById('import_mapping').addEventListener('change', readSingleFile, false);
 	</script>
-	
+
 <div class="navbar navbar-default navbar-fixed-bottom footerPanel hide">
     <div class="container">
 	  <button href="#" onclick="undoConnections()" class="navbar-btn btn-warning btn undoButton" disabled>
       <span class="glyphicon glyphicon-repeat"></span>  Undo </button>
 	  <button href="#" onclick="redoConnections()" class="navbar-btn btn-primary btn redoButton" disabled>
-      <span class="glyphicon glyphicon-refresh"></span>  Redo </button> 
+      <span class="glyphicon glyphicon-refresh"></span>  Redo </button>
       <button onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right">
-      <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </button> 
-	  <button onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right"> 
+      <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </button>
+	  <button onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right">
       <span class="glyphicon glyphicon-download"></span>  Export Mapping </button>
     </div>
 </div>
