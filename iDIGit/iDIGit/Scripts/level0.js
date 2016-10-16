@@ -220,52 +220,89 @@ function downloadJSON(){
 
 // Create Side Bar Item
 function createLevel0Item(name,x,y){
-	
-	console.log(name);
-	var div = $(document.createElement('div'));
-	var i = $(document.createElement('i'));
-	var items = dataCollection[name]['items'];
-	var title = dataCollection[name]['title'];
-	name += "-" + panelCount;
-	
-	div.text(title);
+	if(name=="ADDNEWITEM"){
+		var title=window.prompt("Please Enter Output Name : ");
+		var div = $(document.createElement('div'));
+		var i = $(document.createElement('i'));
+		div.text(title);
+		title += "-" + panelCount;
+		i.addClass('level0-handle');
+		i.attr('id','i' + title);
+		i.addClass('glyphicon');
+		i.addClass('glyphicon-triangle-left');
 
-	i.addClass('level0-handle');
-	i.attr('id','i' + name);
-	i.addClass('glyphicon');
-	i.addClass('glyphicon-triangle-right');
+		div.addClass('nameContainer');
+		div.attr('id',title);
+		div.addClass(title);
+		div.css('border-top','1px solid');
+		div.css('border-bottom','1px solid');
+		div.css('z-index','999');
+		div.css('cursor','pointer');
+		div.css('float','left');
+		div.css('max-width','200px');
 
-	div.addClass('nameContainer');
-	div.attr('id',name);
-	div.addClass(name);
-	div.css('border-top','1px solid');
-	div.css('border-bottom','1px solid');
-	div.css('z-index','999');
-	div.css('cursor','pointer');
-	div.css('float','left');
-	div.css('max-width','200px');
+		div.append(i);
+		div.offset({ top: y, left: x });
+		$('.mainbar').append(div);
 
-	div.append(i);
-	div.offset({ top: y, left: x });
-	$('.mainbar').append(div);
+		div.draggable({
+		  drag: function() {
+			jsPlumb.repaintEverything();
+		  }
+		});
+		
+		jsPlumb.makeTarget(i, {
+			parent: div,
+			isSource:true,
+			anchor: 'Continuous'
+		});
+		panelCount+=1;
+	}else{
+		var div = $(document.createElement('div'));
+		var i = $(document.createElement('i'));
+		var items = dataCollection[name]['items'];
+		var title = dataCollection[name]['title'];
+		name += "-" + panelCount;
+		
+		div.text(title);
 
-	div.draggable({
-      drag: function() {
-        jsPlumb.repaintEverything();
-      }
-    });
-	
-	jsPlumb.makeSource(i, {
-		parent: div,
-		isSource:true,
-		anchor: 'Continuous',
-		parameters : {
-			'name' : name,
-			'title' : title,
-			'items' : items
-		}
-	});
-	panelCount+=1;
+		i.addClass('level0-handle');
+		i.attr('id','i' + name);
+		i.addClass('glyphicon');
+		i.addClass('glyphicon-triangle-right');
+
+		div.addClass('nameContainer');
+		div.attr('id',name);
+		div.addClass(name);
+		div.css('border-top','1px solid');
+		div.css('border-bottom','1px solid');
+		div.css('z-index','999');
+		div.css('cursor','pointer');
+		div.css('float','left');
+		div.css('max-width','200px');
+
+		div.append(i);
+		div.offset({ top: y, left: x });
+		$('.mainbar').append(div);
+
+		div.draggable({
+		  drag: function() {
+			jsPlumb.repaintEverything();
+		  }
+		});
+		
+		jsPlumb.makeSource(i, {
+			parent: div,
+			isSource:true,
+			anchor: 'Continuous',
+			parameters : {
+				'name' : name,
+				'title' : title,
+				'items' : items
+			}
+		});
+		panelCount+=1;
+	}
 }
 
 function createSideBarItem(name){
