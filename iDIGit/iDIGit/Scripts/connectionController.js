@@ -1,3 +1,15 @@
+// ----------- LIST OF Function ---------------
+/*
+	1. Connection Event
+	2. Undo Connection (Level1)
+	3. Redo Connection (Level1)
+	4. Detach Connection (Level1)
+	5. Print Connection (Level1)
+	6. Connection Arrow (Global)
+*/
+
+
+// 1. Connection Event
 //When Connection was made , take each other parameters and process it
 jsPlumb.bind('connection',function(info,ev){
 	if(state==0){
@@ -36,6 +48,8 @@ jsPlumb.bind('connection',function(info,ev){
 	}
 });
 
+
+// 2. Undo Connection (Level 1)
 function undoConnections(){
 	jsPlumb.detachAllConnections(connUndo[URCount-1]);
 	connUndo[URCount] = "";
@@ -50,6 +64,7 @@ function undoConnections(){
 
 }
 
+// 3. Redo Connection (Level 1)
 function redoConnections(){
 	//console.log(sourceRedo);
 	//console.log(targetRedo);
@@ -60,6 +75,7 @@ function redoConnections(){
 	//$('.redoButton').attr('disabled','disabled');
 }
 
+// 4. Detach Connection (Level 1)
 //Detaching All Connection
 function detachAllConnections()
 {
@@ -72,6 +88,7 @@ function detachAllConnections()
 
 }
 
+// 5. Print Connection List (Level 1)
 function printToRoundedRect(){
 	var con=jsPlumb.getAllConnections();
 	var data="";
@@ -100,7 +117,15 @@ function printToRoundedRect(){
 		tr.append(targettd2);
 		$(".rectText-TBODY").append(tr);
 	}
-
-	
-	
 }
+
+// 6. Connection Arrow (Global)
+// Create Arrow on the Connection Line
+jsPlumb.Defaults.Overlays = [
+            [ "Arrow", { 
+                location:1,
+                id:"arrow",
+                length:25,
+                foldback:0.8
+            } ]
+];	

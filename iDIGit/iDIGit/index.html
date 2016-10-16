@@ -109,11 +109,18 @@
 			</div>
 		</div>
 	</nav>
+	
 	<div class="sidebar sidebar-holder" id="sidebar">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<a class="sidebar-item">Add Item</a>
+		<a class="sidebar-item no-select">Add Item</a>
 	</div>
 	<span onclick="openNav()" class="open-sidebar noselect"> » </span>
+	<div aria-label="Page navigation" class="levelPage" id="levelPage">
+	  <ul class="pagination">
+		<li class="active level0paging noselect" onclick="level0Confirm()"><a href="#">Level 0</a></li>
+		<li class="level1paging noselect" onclick="level1Confirm()"><a href="#" >Level 1</a></li>
+	  </ul>
+	</div>
 	<div class="container-fluid">
 		<div class="row">
 			
@@ -121,11 +128,11 @@
 
 			</div>
 			
-			<div class="circleBase"><p>Data Integration</p></div>
+			<div class="circleBase noselect"><p>Data Integration</p></div>
 		</div>
 		<div class="row">
 			<div class="roundedRectangle rectText hide noselect" id="rectText" style="bottom:50px;border:1px black solid;right:0px;float:right;height:20vh;position:absolute;overflow:auto;">
-				<button type="button" class="close" data-dismiss="rectText">&times;</button>
+				<button type="button" class="close" onclick="hideRect()" >&times;</button>
 				<table class="table table-condensed table-hover">
 					<thead>
 						<th colspan="2">SOURCE</th>
@@ -138,7 +145,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- Modal -->
 	<div id="chooseItemModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -188,7 +195,9 @@
       <span class="glyphicon glyphicon-repeat"></span>  Undo </button>
 	  <button href="#" onclick="redoConnections()" class="navbar-btn btn-primary btn redoButton" disabled>
       <span class="glyphicon glyphicon-refresh"></span>  Redo </button> 
-      <button onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right">
+      <button onclick="showRect()" class="navbar-btn btn-info btn">
+      <span class="glyphicon glyphicon-unchecked"></span>  Connection List </button> 
+	  <button onclick="detachAllConnections()" class="navbar-btn btn-danger btn pull-right" style="margin-left:1px;">
       <span class="glyphicon glyphicon-remove"></span>  Detach All Connections </button> 
 	  <button onclick="downloadJSON()" class="navbar-btn btn-success btn pull-right"> 
       <span class="glyphicon glyphicon-download"></span>  Export Mapping </button>

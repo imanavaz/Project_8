@@ -14,7 +14,7 @@ body {
 }*/
 
 .open-sidebar{
-	background-color:black;
+	background-color:#84acb3;
 	color:white;
 	position:absolute;
 	z-index:1;
@@ -24,7 +24,7 @@ body {
 }
 /* The side navigation menu */
 .sidebar {
-    height: 100vh; /* 100% Full-height */
+    height: 100%; /* 100% Full-height */
     width: 250px; /* 0 width - change this with JavaScript */
     position: absolute; /* Stay in place */
     z-index: 2; /* Stay on top */
@@ -144,4 +144,10 @@ tbody {
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;           /* Non-prefixed version, currently
                                   not supported by any browser */
+}
+
+.levelPage{
+	margin-left:255px;
+	position:relative;
+	transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }

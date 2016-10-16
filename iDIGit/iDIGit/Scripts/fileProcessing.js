@@ -1,12 +1,9 @@
-﻿//== Declare Variable
+﻿//===== Declare Variable =====
 var contents;
 var w = 500;
 var h = 400;
-var resultDiv;
 var panelCount=1;
-var newState;
 var i = 0;
-var div;
 var panelTitle;
 var counterConnections = 0;
 var dataJSON="";
@@ -22,6 +19,8 @@ var resultlevel0 = [];
 var level0Object;
 var state = 0;
 var dataCollection = [];
+//======= END =================
+
 
 //When document ready toggle
 $( document ).ready(function() {
@@ -32,24 +31,41 @@ $( document ).ready(function() {
 	jsPlumb.makeTarget($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
+	}); 
+	//make target circle
+	jsPlumb.makeSource($('.circleBase'), {
+	  anchor: 'Continuous',
+	  MaxConnections : 1
 	}); //make target circle
-	//jsPlumb.makeSource($('.circleBase'), {
-	//  anchor: 'Continuous',
-	//  MaxConnections : 1
-	//}); //make target circle
 	
 	$("#checkAll").change(function () {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
 	}); //checkALl Function
 	$(".circleBase").on("click", function(){
-		if (confirm('Are you sure want to continue to Level 1?')) {
-			level1Start();
-		} else {
-			// Do nothing!
-		}
+		level1Confirm();
 	});
 
 });
+
+function level1Confirm(){
+	if(state!=1){
+		if (confirm('Are you sure want to continue to Level 1?')) {
+				level1Start();
+			} else {
+				// Do nothing!
+			}
+	}
+}
+
+function level0Confirm(){
+	if(state!=0){
+		if (confirm('Are you sure want to back to Level 0?')) {
+				level0Start();
+			} else {
+				// Do nothing!
+			}
+	}
+}
 
 function importDataClick() {
     $("#popUpInput").show();
@@ -188,9 +204,11 @@ jQuery.fn.center = function () {
 /* Set the width of the side navigation to 250px */
 function openNav() {
     document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("levelPage").style.marginLeft = "255px";
 }
 
 /* Set the width of the side navigation to 0 */
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
+    document.getElementById("levelPage").style.marginLeft = "0";
 }

@@ -1,14 +1,3 @@
-jsPlumb.Defaults.Overlays = [
-            [ "Arrow", { 
-                location:1,
-                id:"arrow",
-                length:25,
-                foldback:0.8
-            } ]
-];	
-
-
-
 
 //Saving Level 0 Result
 function saveLevel0Result(){
@@ -31,25 +20,45 @@ function saveLevel0Result(){
 	//console.log(resultlevel0);
 }
 
+//Level 0 Start Function
+function level0Start(){
+	jsPlumb.detachEveryConnection();
+	$(".footerPanel").addClass('hide');
+	$(".rectText").addClass('hide');
+	$(".circleBase").removeClass('hide');
+	$(".level0paging").addClass('active');
+	$(".level1paging").removeClass('active');
+	panelCount=1;
+	//console.log(resultlevel0);
+	for(var i=0;i<resultlevel0.length;i++){
+		var result = resultlevel0[i];
+		$("#state"+i).remove();
+		createLevel0Item(result['title'],result['left'],result['top']);
+	}
+	state=0;
+}
+
 //Level 1 Start Function
 function level1Start(){
 	jsPlumb.detachEveryConnection();
 	$(".footerPanel").removeClass('hide');
 	$(".rectText").removeClass('hide');
-	$(".circleBase").remove();
+	$(".circleBase").addClass('hide');
+	$(".level0paging").removeClass('active');
+	$(".level1paging").addClass('active');
 	
 	for(var i=0;i<resultlevel0.length;i++){
 		var result = resultlevel0[i];
-		console.log(result);
 		$("."+result['name']).remove();
-		createPanel(result);
+		createPanel(result,i);
 	}
 	
 	state=1;
 }
 
-function createPanel(item){
-	var table = $(document.createElement('table')).attr('id', 'state' + panelCount).addClass('table').addClass('table-responsive').addClass('table-condensed').addClass('table-hover');
+// Create Level 1 Panel
+function createPanel(item,stateCounter){
+	var table = $(document.createElement('table')).attr('id', 'state' + stateCounter).addClass('table').addClass('table-responsive').addClass('table-condensed').addClass('table-hover');
 	var thead = $(document.createElement('thead'));
 	var title = $(document.createElement('th')).attr('colspan','2').addClass('heading').text(item['title']);
 	var body = $(document.createElement('tbody')).addClass('').addClass('').attr('id', 'also' + item['name']).addClass('');
@@ -278,4 +287,12 @@ function createSideBarItem(name){
 
 
 
+}
+
+function hideRect(){
+	$(".rectText").addClass('hide');
+}
+
+function showRect(){
+	$(".rectText").removeClass('hide');
 }
