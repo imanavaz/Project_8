@@ -257,6 +257,23 @@ function createLevel0Item(name,x,y){
 			anchor: 'Continuous'
 		});
 		panelCount+=1;
+	}else if(name=="ADDDATAINTEGRATION"){
+		var div = $(document.createElement('div'));
+		var p = $(document.createElement('p'));
+		
+		div.addClass("circleBase");
+		div.addClass("noselect");
+		p.text("Data Integration");
+		div.offset({ top: y, left: x });
+		
+		div.append(p);
+		div.draggable({
+		  drag: function() {
+			jsPlumb.repaintEverything();
+		  }
+		});
+		$('.mainbar').append(div);
+		
 	}else{
 		var div = $(document.createElement('div'));
 		var i = $(document.createElement('i'));

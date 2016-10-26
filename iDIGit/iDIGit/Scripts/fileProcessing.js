@@ -212,3 +212,22 @@ function closeNav() {
     document.getElementById("sidebar").style.width = "0";
     document.getElementById("levelPage").style.marginLeft = "0";
 }
+
+/* Create CSV */
+function downloadCSV(){
+	var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+	var csvContent = "data:text/csv;charset=utf-8,";
+	data.forEach(function(infoArray, index){
+
+	   dataString = infoArray.join(",");
+	   csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+	}); 
+	var encodedUri = encodeURI(csvContent);
+	var element = document.createElement('a');
+
+	element.setAttribute('href', encodedUri);
+	element.setAttribute('download', "fileName.csv");
+	element.click();
+	
+}

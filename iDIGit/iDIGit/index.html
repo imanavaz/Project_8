@@ -113,6 +113,8 @@
 	<div class="sidebar sidebar-holder" id="sidebar">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<a class="sidebar-item no-select" id="ADDNEWITEM" draggable="true" ondragstart="drag(event)">Add Item</a>
+		<a class="sidebar-item no-select" id="ADDDATAINTEGRATION" draggable="true" ondragstart="drag(event)">Data Integration</a>
+		<a class="sidebar-item no-select" id="downloadCSV" onclick="downloadCSV()" style="cursor:pointer;">Download CSV</a>
 	</div>
 	<span onclick="openNav()" class="open-sidebar noselect"> » </span>
 	<div aria-label="Page navigation" class="levelPage" id="levelPage">
@@ -127,7 +129,6 @@
 			<div class="mainbar col-sm-12" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 			</div>
-			<div class="circleBase noselect"><p>Data Integration</p></div>
 		</div>
 		<div class="row">
 			<div class="roundedRectangle rectText hide noselect" id="rectText" style="bottom:50px;border:1px black solid;right:0px;float:right;height:20vh;position:absolute;overflow:auto;">
