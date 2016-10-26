@@ -27,17 +27,17 @@ $( document ).ready(function() {
     $('[data-toggle="popover"]').popover(); //Enable popover
 	$('.circleBase').center(); //center the circle
 	//jsPlumb.draggable($('.circleBase')); //center the circle
-	
+
 	jsPlumb.makeTarget($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
-	}); 
+	});
 	//make target circle
 	jsPlumb.makeSource($('.circleBase'), {
 	  anchor: 'Continuous',
 	  MaxConnections : 1
 	}); //make target circle
-	
+
 	$("#checkAll").change(function () {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
 	}); //checkALl Function
@@ -49,21 +49,21 @@ $( document ).ready(function() {
 
 function level1Confirm(){
 	if(state!=1){
-		if (confirm('Are you sure want to continue to Level 1?')) {
+		//if (confirm('Are you sure want to continue to Level 1?')) {
 				level1Start();
-			} else {
+			//} else {
 				// Do nothing!
-			}
+			//}
 	}
 }
 
 function level0Confirm(){
 	if(state!=0){
-		if (confirm('Are you sure want to back to Level 0?')) {
+		//if (confirm('Are you sure want to back to Level 0?')) {
 				level0Start();
-			} else {
+			//} else {
 				// Do nothing!
-			}
+			//}
 	}
 }
 
@@ -117,19 +117,19 @@ function processCSV(f)
 
 			//== Change the result data to string
 			var resultData = results.meta.fields.toString();
-			
+
 			//== Split to take the data each
 			var resultArray = resultData.split(",");
-			
+
 			dataCollection[panelTitle] = {
 				'title' : panelTitle,
 				'items' : resultArray
 			};
-			
+
 			//createSideBarItem(resultArray);
 			createSideBarItem(panelTitle);
 
-			
+
         }
     });
 
